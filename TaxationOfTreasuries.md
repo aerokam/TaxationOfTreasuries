@@ -1,6 +1,6 @@
-# Mega-Summary: Taxation of T-Notes, T-Bonds, and TIPS in Taxable Accounts — All 6 Scenarios
+# Taxation of Treasury Notes and Bonds, including TIPS
 
-This covers nominal Treasury notes/bonds and TIPS with coupons. T-bills are simpler and excluded. 
+Currently this doc address six common scenarios that have been addressed in this thread. It addresses only notes and bonds now, since that was what the questions were about.
 
 **We probably should add info on T-bills as well.**
 
