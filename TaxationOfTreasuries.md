@@ -1,6 +1,10 @@
 # Mega-Summary: Taxation of T-Notes, T-Bonds, and TIPS in Taxable Accounts — All 6 Scenarios
 
-This covers nominal Treasury notes/bonds and TIPS with coupons. T-bills are simpler and excluded. All Treasury interest is federally taxable at ordinary income rates and exempt from state/local tax. This summary addresses the 6 purchase/disposition scenarios that generate the bulk of annual tax questions here.
+This covers nominal Treasury notes/bonds and TIPS with coupons. T-bills are simpler and excluded. 
+
+**We probably should add info on T-bills as well.**
+
+All Treasury interest is federally taxable at ordinary income rates and exempt from state/local tax. This summary addresses the 6 purchase/disposition scenarios that generate the bulk of annual tax questions here.
 
 ---
 
