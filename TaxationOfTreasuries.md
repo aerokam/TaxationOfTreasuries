@@ -33,8 +33,7 @@ All Treasury interest is federally taxable at ordinary income rates and exempt f
 The simplest case. See [Finance Buff: Which Treasury to Buy While Keeping Your Taxes Simple](https://thefinancebuff.com/buy-treasury-simple-taxes.html).
 
 - Each year: coupon interest on 1099-INT Box 3. Import and file. Done.
-- At auction, price is typically at a slight discount to par (de minimis). At maturity: tiny capital gain on 1099-B, or broker may fold it into Box 3. Either way, small amount.
-- Accrued interest at purchase: usually zero or negligible at original auction. If nonzero (uncommon), subtract from first coupon year's Schedule B.
+- At auction, price is typically at a slight discount to par (de minimis). At maturity: tiny capital gain on 1099-B (Schedule D), or broker may fold it into Box 3. De minimis discount is NOT AMD — it is treated as capital gain, not ordinary interest, and carries no state ambiguity.- Accrued interest at purchase: usually zero or negligible at original auction. If nonzero (uncommon), subtract from first coupon year's Schedule B.
 - No AMD, no market premium complications.
 - State return: Box 3 automatically excluded by most tax software.
 
