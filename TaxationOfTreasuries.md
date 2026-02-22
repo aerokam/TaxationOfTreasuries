@@ -244,7 +244,12 @@ This is where most annual confusion originates. Box 3 (coupon interest) and Box 
 
 **HRB import caveat:** If you import a Schwab (or other broker) consolidated 1099 into HRB, the Box 1f AMD may import but the description/memo field may be blank, which can cause capital gains on Schedule D to be overstated. Verify after import.[^hrb-import]
 
-**HRB-specific known bug — Bond Premium + Accrued Interest Paid:** HRB has a longstanding bug (confirmed through at least tax year 2023): when a single 1099-INT has both bond premium amortization (Box 12) and accrued interest paid to seller requiring an adjustment, HRB cannot handle both adjustments on one 1099-INT entry. The workaround is to split the brokerage's 1099-INT into two dummy 1099-INTs, each handling one adjustment, with the Box 3 amounts split between them totaling the correct sum. The IRS matches totals, not individual 1099s, so this is acceptable.[^hrb-bug]
+**HRB limitation — Bond Premium + Accrued Interest Paid:** HRB allows only one adjustment per 1099-INT entry. If your 1099-INT requires both an amortizable bond premium (ABP) adjustment and an accrued interest paid adjustment, you must split it into two 1099-INT entries:
+
+- Split the Box 3 interest between the two entries in any proportion — the only requirement is that each entry has enough Box 3 interest to cover its adjustment. HRB will flag an error if Box 3 is zero on an entry with an adjustment.
+- Do one adjustment (ABP or accrued interest) on each entry.
+- The two Box 3 amounts must sum to the total on the broker's 1099-INT.
+- The IRS matches totals, not individual 1099s, so this split is acceptable.[^hrb-bug]
 
 ### FreeTaxUSA
 
