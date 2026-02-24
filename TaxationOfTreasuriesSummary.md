@@ -22,7 +22,7 @@ All Treasury interest is federally taxable at ordinary income rates and exempt f
 - [Filing Checklist by Scenario](#filing-checklist-by-scenario)
 - [TIPS — Additional Layer](#tips--additional-layer-applies-to-all-6-scenarios)
 - [Where Things Go — Quick Reference](#where-things-go--quick-reference)
-- [Tax Software: How TurboTax and H&R Block Handle AMD Differently](#tax-software-how-turbotax-and-hr-block-handle-amd-differently)
+- [Tax Software: Entry Guide for TurboTax and H&R Block](#tax-software-entry-guide-for-turbotax-and-hr-block)
 - [The Finance Buff Principle — Why It Matters](#the-finance-buff-principle--why-it-matters)
 - [Common Mistakes](#common-mistakes)
 - [Caveats](#caveats)
@@ -213,63 +213,130 @@ All of the above applies to TIPS, plus:
 
 ---
 
-## Tax Software: How TurboTax and H&R Block Handle AMD Differently
+## Tax Software: Entry Guide for TurboTax and H&R Block
 
-This is where most annual confusion originates. Box 3 (coupon interest) and Box 8 (TIPS OID) flow correctly in both programs. AMD from 1099-B Box 1f is where they diverge.
+1099-INT Box 3 (coupon interest) and 1099-OID Box 8 (TIPS OID) flow correctly in both programs with no manual steps needed federally. The items below require attention.
 
-### TurboTax
+**Downloaded vs. manual entry:** If you download your 1099s directly from your broker into your tax software, most fields will be pre-populated — you won't need to re-enter box values. Your job is to navigate to the adjustment screens and enter the adjustments. If you enter manually, you'll first transcribe each box value from your paper or PDF 1099, then proceed to the same adjustment screens.
 
-**Federal handling:** Enter each 1099-B transaction *one by one* (not as a sales summary). When you enter Box 1f, TurboTax automatically:
+---
 
-- Applies Code D on Form 8949, reducing the capital gain by the AMD amount
-- Carries the AMD to Schedule B as "Accrued Market Discount" — ordinary interest income
+### 1099-INT Items
+
+#### 1. ABP — Amortizable Bond Premium (1099-INT Box 12)
+
+Applies when you bought at a premium (above face value). The broker amortizes the premium annually and reports it in Box 12, reducing your taxable coupon interest. The broker handles the calculation — you need to confirm your tax software picks it up correctly.
+
+**TurboTax:** Unknown — community input needed.
+
+**H&R Block:** If downloaded, Box 12 is already populated. If manual, enter the Box 12 amount first. Then on the 1099-INT data entry screen:
+
+1. Copy the Box 12 amount (Ctrl+C Windows / Cmd+C Mac)
+2. Check *"Interest item requires an adjustment (uncommon)"* at the bottom of the screen
+3. Click Next
+4. On the adjustment options screen, select *"The premium on this bond can be amortized"*
+5. Click Next
+6. Paste the amount (Ctrl+V / Cmd+V) into the amortizable bond premium adjustment field
+
+Note: this adjustment screen appears automatically after clicking Next, even without checking the adjustment box. Entering the amount on both screens is not double-counting — HRB requires it.
+
+**To verify (desktop version):** Forms → Schedule B — ABP should appear as a negative number.
+
+---
+
+#### 2. Accrued Interest Paid to Seller (1099 supplement only)
+
+Applies in the year you receive your first coupon after buying on the secondary market or at a reopening auction. Your broker reports this in the supplemental section of your composite 1099 but does **not** report it to the IRS — you must find it there and enter it manually as a negative adjustment on Schedule B.
+
+**Not pre-populated:** Even if you downloaded your 1099, this amount will not be in any box. Find it in the broker's supplemental information and enter it yourself.
+
+**TurboTax:** In the 1099-INT interview, look for *"I need to adjust the interest reported on my form."* Enter the accrued interest as a negative number and select *"My accrued interest is included in this 1099-INT."* Appears on Schedule B as ACCRUED INTEREST with a negative amount.
+
+**H&R Block:** On the 1099-INT data entry screen:
+
+1. Check *"Interest item requires an adjustment (uncommon)"* at the bottom of the screen
+2. Click Next
+3. On the adjustment options screen, select *"Bought or sold this bond between interest payments"*
+4. Click Next
+5. Enter the accrued interest paid amount from the supplemental section of your broker's composite 1099
+
+Appears on Schedule B as ACCRUED INTEREST with a negative number.
+
+---
+
+#### 3. ABP + Accrued Interest Paid Together
+
+Applies when a single 1099-INT requires both an ABP adjustment (Box 12) and an accrued interest paid adjustment — common in the first coupon year after buying at a premium on the secondary market.
+
+**TurboTax:** Unknown — community input needed.
+
+**H&R Block:** HRB allows only one adjustment per 1099-INT entry (a feature limitation). Split the broker's 1099-INT into two entries:
+
+- **Entry 1:** Original payer name. Reduce Box 3 by enough to cover Entry 2. Apply the ABP adjustment (steps in section 1 above).
+- **Entry 2:** Same or similar payer name. Remaining Box 3 amount. Apply the accrued interest paid adjustment (steps in section 2 above).
+
+The two Box 3 amounts must sum to the broker's total. The IRS matches totals, not individual 1099s — this split is acceptable. Keep a note in your records explaining the split.[^hrb-split]
+
+---
+
+### 1099-B Items
+
+#### 4. AMD — Accrued Market Discount (1099-B Box 1f)
+
+Accrued market discount is the market discount that accrued between the purchase settlement date and the disposition settlement date (typically maturity, or date of sale if sold before maturity).
+
+**Import caveat (HRB):** AMD from Box 1f may not import correctly from some brokers — it may be missing or have a blank description, causing Schedule D capital gains to be overstated. Check Box 1f after import and add the AMD amount manually if missing.[^hrb-import]
+
+**TurboTax:** Enter each 1099-B transaction *one by one* (not as a sales summary). TT automatically applies Code D on Form 8949 and carries AMD to Schedule B as ordinary interest income.
 
 **Critical: use one-by-one entry, not sales summary.** If you enter as a sales summary total, TT may apply Code D but not carry AMD to Schedule B, causing underreporting of income. Summary-entry adjustments also trigger a requirement to mail a paper statement to the IRS.[^tt-onebyone]
 
-**State handling:** Even when AMD is correctly moved to Schedule B federally, TurboTax typically does *not* automatically carry it to the state Treasury interest exclusion. For states like NY, entering the AMD amount with state code "NY" in the adjustment worksheet does not increase the US Government interest subtraction on the state return. A manual override of the state Treasury interest exclusion line is usually required, adding the AMD to the Box 3 total for state exclusion purposes. This override does not prevent e-filing.[^tt-ny-override]
+**State handling:** Even when AMD is correctly moved to Schedule B federally, TurboTax typically does *not* automatically carry it to the state Treasury interest exclusion. A manual override of the state Treasury interest exclusion line is usually required, adding the AMD to the Box 3 total for state exclusion purposes. This override does not prevent e-filing.[^tt-ny-override]
 
-### H&R Block
+**H&R Block:** HRB applies Code D automatically but warns that AMD must also be reported as interest income — it does *not* do this automatically.[^hrb-dummy]
 
-**Federal handling:** When you enter the 1099-B with Box 1f AMD, HRB:
+**Required manual step — dummy 1099-INT:** Create a new 1099-INT to report the AMD as interest income:
 
-- Subtracts the AMD from the capital gain on Form 8949 (Code D), netting gain to zero
-- Then warns you that the AMD must also be reported as interest income on a 1099-INT — but does *not* do this automatically[^hrb-dummy]
+1. Use a descriptive payer name identifying the broker and the purpose, e.g., "Fidelity Accrued Market Discount"
+2. Enter the AMD amount in **Box 3** (US Treasury Obligations), NOT Box 1 — this is critical[^hrb-dummy]
 
-**Required manual step — the "dummy 1099-INT":** You must create a separate 1099-INT entry in HRB to report the AMD as interest income:
+**Why Box 3 matters:** HRB treats Box 3 entries as state-exempt Treasury interest automatically. Box 1 entries are taxed at the state level. This makes HRB's workaround more reliable for state treatment than TT once you know the procedure.
 
-- Create a new 1099-INT with a descriptive payer name such as "Fidelity Treasury Market Discount" (do not call it "Accrued Market Discount" — you didn't accrue it annually, you realized it at disposal)
-- Enter the AMD amount in **Box 3** (US Treasury Obligations), NOT Box 1 — this is critical[^hrb-dummy]
-
-**Why Box 3 matters in HRB:** Entering in Box 3 of the dummy 1099-INT causes HRB to automatically treat it as state-exempt Treasury interest and carry it through to the state return correctly. If you enter in Box 1 instead, HRB will tax it at the state level. This is actually an advantage over TurboTax's approach — HRB's workaround, while manual, achieves the correct state result more reliably once you know the procedure.
-
-**HRB import caveat:** If you import a Schwab (or other broker) consolidated 1099 into HRB, the Box 1f AMD may import but the description/memo field may be blank, which can cause capital gains on Schedule D to be overstated. Verify after import.[^hrb-import]
-
-**HRB limitation — Bond Premium + Accrued Interest Paid:** HRB allows only one adjustment per 1099-INT entry. If your 1099-INT requires both an amortizable bond premium (ABP) adjustment and an accrued interest paid adjustment, you must split it into two 1099-INT entries:
-
-- Split the Box 3 interest between the two entries in any proportion — the only requirement is that each entry has enough Box 3 interest to cover its adjustment. HRB will flag an error if Box 3 is zero on an entry with an adjustment.
-- Do one adjustment (ABP or accrued interest) on each entry.
-- The two Box 3 amounts must sum to the total on the broker's 1099-INT.
-- The IRS matches totals, not individual 1099s, so this split is acceptable.[^hrb-bug]
-
-### FreeTaxUSA
+#### FreeTaxUSA
 
 For completeness: FreeTaxUSA reportedly handles AMD more automatically — it adds the AMD from Box 1f to Schedule B without requiring a dummy 1099-INT. Whether it correctly identifies it as Treasury interest for state exclusion purposes requires verification by the user.[^ftusa]
 
-### Summary — AMD Handling by Software
+---
 
-|                                  | TurboTax                     | H&R Block                         | FreeTaxUSA      |
-| -------------------------------- | ---------------------------- | --------------------------------- | --------------- |
-| Code D on Form 8949              | Auto                         | Auto                              | Auto            |
-| AMD → Schedule B as interest     | Auto (one-by-one entry only) | Manual (dummy 1099-INT)           | Auto            |
-| State Treasury exemption for AMD | Manual override required     | Auto if dummy 1099-INT uses Box 3 | Verify manually |
+### 1099-OID Items
+
+#### 5. TIPS OID — Inflation Adjustment (1099-OID Box 8)
+
+Flows to Schedule B as ordinary income in both TT and HRB with no manual steps needed federally. State exemption also handled automatically. No known issues.
+
+If you bought TIPS at a premium on the secondary market, the acquisition premium is reported in 1099-OID Box 6 and offsets Box 8 OID — broker handles the calculation. Verify it flows correctly in your software.
+
+---
+
+### Summary Table
+
+| Item | Form / Box | TurboTax | H&R Block |
+|---|---|---|---|
+| ABP | 1099-INT Box 12 | Unknown | Manual — two-screen entry |
+| Accrued interest paid | 1099 supplement | Manual — negative adjustment | Manual — negative adjustment |
+| ABP + accrued interest | — | Unknown | Manual — split into two entries |
+| AMD → Schedule B | 1099-B Box 1f | Auto (one-by-one entry only) | Manual — dummy 1099-INT Box 3 |
+| AMD state exemption | — | Manual override required | Auto if dummy uses Box 3 |
+| Coupon interest | 1099-INT Box 3 | Auto | Auto |
+| TIPS OID | 1099-OID Box 8 | Auto | Auto |
 
 ### Bottom Line for Filers
 
-| Software      | Quick Steps                                                                                                                                                                    | Gotcha                                                                                                                                                                                                                                        |
-| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **TurboTax**  | Enter 1099-B bond transactions one-by-one. Verify AMD appears on Schedule B. Then manually check/override your state return to include AMD in the Treasury interest exclusion. | Summary-entry mode prevents AMD from flowing to Schedule B, causing income underreporting. Always use one-by-one entry. State return requires manual AMD addition — software does not auto-carry it to exclusion.                             |
-| **H&R Block** | After entering the 1099-B with Box 1f, create a dummy 1099-INT with the AMD amount in Box 3. Verify your 1099-B import didn't leave the capital gain overstated.               | Box 3 is critical — Box 1 causes state taxation of AMD. If importing Schwab consolidated 1099, verify memo field populated and capital gain not doubled. The Bond Premium + Accrued Interest bug requires splitting into two dummy 1099-INTs. |
-| **Both**      | The IRS matches totals, not individual 1099 line items, so splitting entries across dummy 1099-INTs for mechanical reasons is acceptable and does not trigger issues.          | Don't panic if you create a dummy 1099-INT for workarounds — IRS matches Box totals across all 1099s you file, not individual forms.                                                                                                          |
+| Software | Quick Steps | Gotcha |
+|---|---|---|
+| **TurboTax** | Enter 1099-B bond transactions one-by-one. Verify AMD appears on Schedule B. Manually check/override state return to include AMD in Treasury interest exclusion. ABP and accrued interest entry steps not yet documented — community input welcome. | Summary-entry mode prevents AMD from flowing to Schedule B. State return requires manual AMD addition. |
+| **H&R Block** | After entering 1099-B with Box 1f, create dummy 1099-INT with AMD in Box 3. Enter ABP via two-screen interview. If both ABP and accrued interest on same 1099-INT, split into two entries. Verify import didn't leave capital gains overstated. | Box 3 is critical — Box 1 causes state taxation of AMD. ABP+accrued interest on same 1099-INT requires split workaround. |
+| **Both** | The IRS matches totals, not individual 1099 line items, so splitting entries across dummy 1099-INTs is acceptable. | Tax software behavior can change year to year — verify before filing. |
 
 ---
 
@@ -325,6 +392,6 @@ Scenario 1 (and its TIPS equivalent) is the only one requiring no manual adjustm
 
 [^hrb-import]: Bogleheads.org megathread, "Taxation of Treasury bills, notes and bonds" — HRB Schwab import AMD memo field issue. <https://www.bogleheads.org/forum/viewtopic.php?t=390405>
 
-[^hrb-bug]: Bogleheads.org forum, "H&R Block software bug: tax-exempt interest with bond premium and accrued interest" — Kevin M's documentation of the Bond Premium + Accrued Interest bug and two-1099-INT workaround. <https://www.bogleheads.org/forum/viewtopic.php?t=273011>
+[^hrb-split]: Bogleheads.org forum, "H&R Block: tax-exempt interest with bond premium and accrued interest" — Kevin M's documentation of the Bond Premium + Accrued Interest split workaround. <https://www.bogleheads.org/forum/viewtopic.php?t=273011>
 
 [^ftusa]: Bogleheads.org megathread, "Taxation of Treasury bills, notes and bonds" — FreeTaxUSA AMD handling reported by users. <https://www.bogleheads.org/forum/viewtopic.php?t=390405>
