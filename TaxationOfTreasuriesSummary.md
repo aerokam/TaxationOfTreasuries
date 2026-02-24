@@ -53,11 +53,11 @@ All Treasury interest is federally taxable at ordinary income rates and exempt f
 
 The simplest case. See [Finance Buff: Which Treasury to Buy While Keeping Your Taxes Simple](https://thefinancebuff.com/buy-treasury-simple-taxes.html).
 
-- Each year: coupon interest on 1099-INT Box 3. Import and file. Done.
+- Each year: coupon interest on 1099-INT Box 3. Import and file. Done, if the taxpayer uses the cash method of reporting interest (as most individuals do). An alternative is the accrual method, under which interest is reported for the year it is earned, whether or not received during the year.
 - At auction, price is typically at a slight discount to par (de minimis).
 - At maturity: the tiny de minimis discount produces a small capital gain reported on 1099-B (Schedule D), or the broker may fold it into Box 3. De minimis discount is NOT treated as AMD — it is treated as capital gain, not ordinary interest, and carries no state ambiguity.
 - The interest accrued between dated date and issue date is small (typically a few days to a couple weeks of coupon interest). You should subtract it from first coupon year's Schedule B to be accurate, but if you forget it, the tax impact is minor because the amount is small—unlike reopenings or secondary market purchases, where accrued interest can be material. The Finance Buff article glosses over this, but the most accurate approach is to do as indicated here.
-- No AMD, no market premium complications.
+- No AMD. There will be a premium if the yield determined by the original auction is less than the minimum interest rate of 0.125%.
 - State return: exact handling depends on the tax software used.
 
 ### Scenario 2: Reopening Auction → Hold to Maturity (T-Notes/Bonds)
@@ -74,7 +74,7 @@ Looks like buying at original auction but has complications. Reopening auctions 
 
 - Subsequent years: normal coupon interest on 1099-INT Box 3.
 
-- Price may be at a premium or discount to par. If discount > de minimis: AMD applies at maturity (see Scenario 5 below). If premium: broker amortizes via Box 12.
+- Price may be at a premium or discount to par depending on the yield of the auction and the interest rate of the reopened Note/Bond. If discount > de minimis: AMD applies at maturity (see Scenario 5 below), unless the taxpayer chooses to accrue the discount over each year. If a premium was paid: broker amortizes via Box 12, unless taxpayer directs the broker not to amortize premiums.
 
 - At maturity: any AMD in 1099-B Box 1f must be moved to Schedule B as interest income (see tax software section below).
 
@@ -196,7 +196,7 @@ All of the above applies to TIPS, plus:
 - Deflation year: if CPI falls, negative OID reduces your taxable income (shown as negative in Box 8 or as an adjustment). Cannot reduce below zero for the year.
 - At maturity: you receive the inflation-adjusted principal. No additional tax on the principal increase at that point — it was already taxed annually via OID.
 - Acquisition premium on TIPS (secondary market): if you paid more than inflation-adjusted par, that acquisition premium offsets OID each year. Broker tracks this; reported in 1099-OID Box 6.[^pub1212]
-- TIPS bought at reopening auction: same accrued interest complications as nominal bonds, plus OID complications. Avoided by buying only at original TIPS auctions and holding to maturity.
+- TIPS bought at auction, either original or reopening, can have accrued interest. With TIPS held in a taxable account, the inflation adjustment to principal during a year is reported by the broker to the taxpayer and the IRS on Form 1099-OID.
 
 ---
 
@@ -227,7 +227,7 @@ All of the above applies to TIPS, plus:
 
 Applies when you bought at a premium (above face value). The broker amortizes the premium annually and reports it in Box 12, reducing your taxable coupon interest. The broker handles the calculation — you need to confirm your tax software picks it up correctly.
 
-**TurboTax:** Box 12 downloads from the broker but still requires manual entry on the adjustment screen — it is not fully automatic. TT allows multiple adjustments on a single 1099-INT, so no splitting is required even if you also have accrued interest on the same 1099-INT. Step-by-step screen navigation not yet documented — see [^tt-needs-detail].[^tt-abp-thread]
+**TurboTax:** Unknown — community input needed.
 
 **H&R Block:** If downloaded, Box 12 is already populated. If manual, enter the Box 12 amount first. Then on the 1099-INT data entry screen:
 
@@ -268,7 +268,7 @@ Appears on Schedule B as ACCRUED INTEREST with a negative number.
 
 Applies when a single 1099-INT requires both an ABP adjustment (Box 12) and an accrued interest paid adjustment — common in the first coupon year after buying at a premium on the secondary market.
 
-**TurboTax:** Unlike HRB, TT allows multiple adjustments on a single 1099-INT — no splitting required. Enter both the ABP and accrued interest adjustments on the same 1099-INT entry. Step-by-step screen navigation not yet documented — see [^tt-needs-detail].[^tt-abp-thread]
+**TurboTax:** Unknown — community input needed.
 
 **H&R Block:** HRB allows only one adjustment per 1099-INT entry (a feature limitation). Split the broker's 1099-INT into two entries:
 
@@ -322,9 +322,9 @@ If you bought TIPS at a premium on the secondary market, the acquisition premium
 
 | Item | Form / Box | TurboTax | H&R Block |
 |---|---|---|---|
-| ABP | 1099-INT Box 12 | Manual — adjustment screen required; multiple adjustments allowed per 1099-INT | Manual — two-screen entry |
+| ABP | 1099-INT Box 12 | Unknown | Manual — two-screen entry |
 | Accrued interest paid | 1099 supplement | Manual — negative adjustment | Manual — negative adjustment |
-| ABP + accrued interest | — | Both on single 1099-INT; screen details not yet documented[^tt-needs-detail] | Manual — split into two entries |
+| ABP + accrued interest | — | Unknown | Manual — split into two entries |
 | AMD → Schedule B | 1099-B Box 1f | Auto (one-by-one entry only) | Manual — dummy 1099-INT Box 3 |
 | AMD state exemption | — | Manual override required | Auto if dummy uses Box 3 |
 | Coupon interest | 1099-INT Box 3 | Auto | Auto |
@@ -334,7 +334,7 @@ If you bought TIPS at a premium on the secondary market, the acquisition premium
 
 | Software | Quick Steps | Gotcha |
 |---|---|---|
-| **TurboTax** | Enter 1099-B bond transactions one-by-one. Verify AMD appears on Schedule B. Manually check/override state return to include AMD in Treasury interest exclusion. For ABP and accrued interest: both adjustments can be made on a single 1099-INT — no splitting needed. Step-by-step screen details not yet documented.[^tt-needs-detail] | Summary-entry mode prevents AMD from flowing to Schedule B. State return requires manual AMD addition. |
+| **TurboTax** | Enter 1099-B bond transactions one-by-one. Verify AMD appears on Schedule B. Manually check/override state return to include AMD in Treasury interest exclusion. ABP and accrued interest entry steps not yet documented — community input welcome. | Summary-entry mode prevents AMD from flowing to Schedule B. State return requires manual AMD addition. |
 | **H&R Block** | After entering 1099-B with Box 1f, create dummy 1099-INT with AMD in Box 3. Enter ABP via two-screen interview. If both ABP and accrued interest on same 1099-INT, split into two entries. Verify import didn't leave capital gains overstated. | Box 3 is critical — Box 1 causes state taxation of AMD. ABP+accrued interest on same 1099-INT requires split workaround. |
 | **Both** | The IRS matches totals, not individual 1099 line items, so splitting entries across dummy 1099-INTs is acceptable. | Tax software behavior can change year to year — verify before filing. |
 
@@ -364,7 +364,7 @@ Scenario 1 (and its TIPS equivalent) is the only one requiring no manual adjustm
 
 - State treatment of AMD on Treasuries is unsettled in several states (notably NY). The dominant view is that AMD, being reclassified as Treasury interest income, should be state-exempt, but no definitive ruling exists in all states. See the extended discussion on NY in this thread and the linked NY-specific thread.
 - Tax software behavior can change year to year. Verify your software is handling AMD correctly before filing.
-- This is a summary of general principles. IRS Publication 550 is the authoritative source. Consult a tax professional for your specific situation.
+- This is a summary of general principles. IRS Publication 550 has additional information. Like other IRS Publications, it is not as authoritative as tax laws, regulations, and court rulings. Consult a tax professional for your specific situation.
 
 ---
 
@@ -394,6 +394,4 @@ Scenario 1 (and its TIPS equivalent) is the only one requiring no manual adjustm
 
 [^hrb-split]: Bogleheads.org forum, "H&R Block: tax-exempt interest with bond premium and accrued interest" — Kevin M's documentation of the Bond Premium + Accrued Interest split workaround. <https://www.bogleheads.org/forum/viewtopic.php?t=273011>
 
-[^tt-needs-detail]: TurboTax screen-by-screen navigation details for ABP and combined ABP + accrued interest adjustments are not documented in this thread. The thread confirms the behavior (multiple adjustments allowed on a single 1099-INT; Box 12 requires manual entry on the adjustment screen) but does not provide step-by-step instructions comparable to the HRB walkthrough above. Community input from TurboTax users is needed to fill this gap.
-
-[^tt-abp-thread]: Bogleheads.org megathread, "Taxation of Treasury bills, notes and bonds" — forum discussion confirming TT allows multiple adjustments per 1099-INT and that Box 12 ABP requires manual entry on the adjustment screen. <https://www.bogleheads.org/forum/viewtopic.php?t=390405>
+[^ftusa]: Bogleheads.org megathread, "Taxation of Treasury bills, notes and bonds" — FreeTaxUSA AMD handling reported by users. <https://www.bogleheads.org/forum/viewtopic.php?t=390405>
