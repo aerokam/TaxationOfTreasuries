@@ -227,7 +227,7 @@ All of the above applies to TIPS, plus:
 
 Applies when you bought at a premium (above face value). The broker amortizes the premium annually and reports it in Box 12, reducing your taxable coupon interest. The broker handles the calculation — you need to confirm your tax software picks it up correctly.
 
-**TurboTax:** Unknown — community input needed.
+**TurboTax:** Box 12 downloads from the broker but still requires manual entry on the adjustment screen — it is not fully automatic. TT allows multiple adjustments on a single 1099-INT, so no splitting is required even if you also have accrued interest on the same 1099-INT. Step-by-step screen navigation not yet documented — see [^tt-needs-detail].[^tt-abp-thread]
 
 **H&R Block:** If downloaded, Box 12 is already populated. If manual, enter the Box 12 amount first. Then on the 1099-INT data entry screen:
 
@@ -268,7 +268,7 @@ Appears on Schedule B as ACCRUED INTEREST with a negative number.
 
 Applies when a single 1099-INT requires both an ABP adjustment (Box 12) and an accrued interest paid adjustment — common in the first coupon year after buying at a premium on the secondary market.
 
-**TurboTax:** Unknown — community input needed.
+**TurboTax:** Unlike HRB, TT allows multiple adjustments on a single 1099-INT — no splitting required. Enter both the ABP and accrued interest adjustments on the same 1099-INT entry. Step-by-step screen navigation not yet documented — see [^tt-needs-detail].[^tt-abp-thread]
 
 **H&R Block:** HRB allows only one adjustment per 1099-INT entry (a feature limitation). Split the broker's 1099-INT into two entries:
 
@@ -322,9 +322,9 @@ If you bought TIPS at a premium on the secondary market, the acquisition premium
 
 | Item | Form / Box | TurboTax | H&R Block |
 |---|---|---|---|
-| ABP | 1099-INT Box 12 | Unknown | Manual — two-screen entry |
+| ABP | 1099-INT Box 12 | Manual — adjustment screen required; multiple adjustments allowed per 1099-INT | Manual — two-screen entry |
 | Accrued interest paid | 1099 supplement | Manual — negative adjustment | Manual — negative adjustment |
-| ABP + accrued interest | — | Unknown | Manual — split into two entries |
+| ABP + accrued interest | — | Both on single 1099-INT; screen details not yet documented[^tt-needs-detail] | Manual — split into two entries |
 | AMD → Schedule B | 1099-B Box 1f | Auto (one-by-one entry only) | Manual — dummy 1099-INT Box 3 |
 | AMD state exemption | — | Manual override required | Auto if dummy uses Box 3 |
 | Coupon interest | 1099-INT Box 3 | Auto | Auto |
@@ -334,7 +334,7 @@ If you bought TIPS at a premium on the secondary market, the acquisition premium
 
 | Software | Quick Steps | Gotcha |
 |---|---|---|
-| **TurboTax** | Enter 1099-B bond transactions one-by-one. Verify AMD appears on Schedule B. Manually check/override state return to include AMD in Treasury interest exclusion. ABP and accrued interest entry steps not yet documented — community input welcome. | Summary-entry mode prevents AMD from flowing to Schedule B. State return requires manual AMD addition. |
+| **TurboTax** | Enter 1099-B bond transactions one-by-one. Verify AMD appears on Schedule B. Manually check/override state return to include AMD in Treasury interest exclusion. For ABP and accrued interest: both adjustments can be made on a single 1099-INT — no splitting needed. Step-by-step screen details not yet documented.[^tt-needs-detail] | Summary-entry mode prevents AMD from flowing to Schedule B. State return requires manual AMD addition. |
 | **H&R Block** | After entering 1099-B with Box 1f, create dummy 1099-INT with AMD in Box 3. Enter ABP via two-screen interview. If both ABP and accrued interest on same 1099-INT, split into two entries. Verify import didn't leave capital gains overstated. | Box 3 is critical — Box 1 causes state taxation of AMD. ABP+accrued interest on same 1099-INT requires split workaround. |
 | **Both** | The IRS matches totals, not individual 1099 line items, so splitting entries across dummy 1099-INTs is acceptable. | Tax software behavior can change year to year — verify before filing. |
 
@@ -394,4 +394,6 @@ Scenario 1 (and its TIPS equivalent) is the only one requiring no manual adjustm
 
 [^hrb-split]: Bogleheads.org forum, "H&R Block: tax-exempt interest with bond premium and accrued interest" — Kevin M's documentation of the Bond Premium + Accrued Interest split workaround. <https://www.bogleheads.org/forum/viewtopic.php?t=273011>
 
-[^ftusa]: Bogleheads.org megathread, "Taxation of Treasury bills, notes and bonds" — FreeTaxUSA AMD handling reported by users. <https://www.bogleheads.org/forum/viewtopic.php?t=390405>
+[^tt-needs-detail]: TurboTax screen-by-screen navigation details for ABP and combined ABP + accrued interest adjustments are not documented in this thread. The thread confirms the behavior (multiple adjustments allowed on a single 1099-INT; Box 12 requires manual entry on the adjustment screen) but does not provide step-by-step instructions comparable to the HRB walkthrough above. Community input from TurboTax users is needed to fill this gap.
+
+[^tt-abp-thread]: Bogleheads.org megathread, "Taxation of Treasury bills, notes and bonds" — forum discussion confirming TT allows multiple adjustments per 1099-INT and that Box 12 ABP requires manual entry on the adjustment screen. <https://www.bogleheads.org/forum/viewtopic.php?t=390405>
