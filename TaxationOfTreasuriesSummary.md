@@ -20,7 +20,7 @@ All Treasury interest is federally taxable at ordinary income rates and exempt f
 - [Key Concepts (Definitions)](#key-concepts-definitions)
 - [The 6 Scenarios](#the-6-scenarios)
 - [Filing Checklist by Scenario](#filing-checklist-by-scenario)
-- [TIPS — Additional Layer](#tips--additional-layer-applies-to-all-6-scenarios)
+- [TIPS — Additional Layer (Applies to All 6 Scenarios)](#tips--additional-layer-applies-to-all-6-scenarios)
 - [Where Things Go — Quick Reference](#where-things-go--quick-reference)
 - [Tax Software: Entry Guide for TurboTax and H&R Block](#tax-software-entry-guide-for-turbotax-and-hr-block)
 - [The Finance Buff Principle — Why It Matters](#the-finance-buff-principle--why-it-matters)
@@ -62,9 +62,9 @@ The simplest case. See [Finance Buff: Which Treasury to Buy While Keeping Your T
 
 ### Scenario 2: Reopening Auction → Hold to Maturity (T-Notes/Bonds)
 
-Looks like buying at original auction but has complications. Reopenings are marked with "R" in [Treasury's auction schedule](https://treasurydirect.gov/auctions/general-auction-timing/).[^financebuff-reopen]
+Looks like buying at original auction but has complications. Reopening auctions are marked with "R" in [Treasury's auction schedule](https://treasurydirect.gov/auctions/general-auction-timing/).[^financebuff-reopen]
 
-- You pay interest accrued between the dated date and the reopening issue date to Treasury. With the exception of the 30-year TIPS, the dated date remains the same for Treasuries between original auction and reopenings, so the accrued interest is larger for the reopenings.
+- You pay interest accrued between the dated date and the reopening issue date to Treasury. With the exception of the 30-year TIPS, the dated date remains the same for Treasuries between original auction and reopening auctions, so the accrued interest is larger for the reopening auctions.
 
 - Your broker's 1099-INT Box 3 will include the full first coupon payment, which overstates your income by the accrued interest you paid.
 
@@ -82,7 +82,7 @@ Looks like buying at original auction but has complications. Reopenings are mark
 
 | Aspect                                 | Original Auction                               | Reopening Auction                                                       |
 | -------------------------------------- | ---------------------------------------------- | ----------------------------------------------------------------------- |
-| **Accrued interest at purchase**       | Small (days between dated date and issue date) | Significant (one or more months since original auction dated date date) |
+| **Accrued interest at purchase**       | Small (days between dated date and issue date) | Significant (one or more months since original auction dated date) |
 | **Dollar impact if not tracked**       | Minor (days of interest)                       | Major (months of interest)                                              |
 | **Your 1099-INT Box 3 first coupon**   | Slightly overstates by small amount            | Notably overstates by accrued interest paid                             |
 | **Schedule B adjustment required**     | Yes, but $ amount is small                     | Yes — and amount is material                                            |
@@ -298,7 +298,7 @@ Accrued market discount is the market discount that accrued between the purchase
 **Required manual step — dummy 1099-INT:** Create a new 1099-INT to report the AMD as interest income:
 
 1. Use a descriptive payer name identifying the broker and the purpose, e.g., "Fidelity Accrued Market Discount"
-2. Enter the AMD amount in **Box 3** (US Treasury Obligations), NOT Box 1 — this is critical[^hrb-dummy]
+2. Enter the AMD amount in **Box 3** (US Treasury Obligations), NOT Box 1 — this is critical[^hrb-split]
 
 **Why Box 3 matters:** HRB treats Box 3 entries as state-exempt Treasury interest automatically. Box 1 entries are taxed at the state level. This makes HRB's workaround more reliable for state treatment than TT once you know the procedure.
 
