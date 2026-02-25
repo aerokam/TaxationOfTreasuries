@@ -2,18 +2,50 @@
 
 ## Dependencies
 
-**Requires:** 2.1_TIPS_Basics.md (ref CPI formula, index ratio, adjusted principal), TaxationOfTreasuries.md (TIPS OID tax treatment overview)
+**Requires:** 2_1_TIPS_Basics.md (ref CPI formula, index ratio, adjusted principal), TaxationOfTreasuries.md (TIPS OID tax treatment overview)
 
-**Adds:** OID calculation detail, broker 1099 reporting differences, cost basis step-up, online statement field interpretation, data sources, verification workflow.
+**Adds:** Regulatory basis for 1099 reporting, qualified stated interest definition, OID calculation detail, amortized bond premium (ABP) calculation, broker 1099 reporting differences, cost basis step-up, online statement field interpretation, data sources, verification workflow.
+
+---
+
+## Regulatory Basis
+
+### Qualified Stated Interest — Treas. Reg. §1.1275-7(d)
+
+For TIPS subject to the coupon bond method, the regulation defines qualified stated interest as follows:
+
+> "All stated interest on the debt instrument is qualified stated interest. For purposes of this paragraph (d), stated interest is qualified stated interest if the interest is unconditionally payable in cash, or is constructively received under section 451, at least annually at a single fixed rate. **Stated interest is payable at a single fixed rate if the amount of each interest payment is determined by multiplying the inflation adjusted principal amount for the payment date by the single fixed rate.**"
+
+This means each TIPS coupon payment = face × IR(payment date) × (coupon rate / 2), where IR is the index ratio on the payment date. The actual cash coupon paid embeds the inflation adjustment because it is applied to inflation-adjusted principal. This is what is reported in **1099-INT Box 3**.
+
+### Form 1099 Reporting Authority
+
+Per IRS Instructions for Forms 1099-INT and 1099-OID:
+
+> "You may report any qualified stated interest on Treasury Inflation Protected Securities in box 3 of Form 1099-INT rather than in box 2 of Form 1099-OID."
+
+Brokers elect either (a) report QSI on 1099-INT Box 3 and OID on 1099-OID Box 8, or (b) report both on 1099-OID (Box 2 and Box 8). In practice virtually all brokers use option (a).
+
+---
+
+## The Three Taxable Items for TIPS Held in Taxable Accounts
+
+| Form | Box | What it is | Formula | State exempt? |
+|---|---|---|---|---|
+| 1099-INT | 3 | Semi-annual coupon (QSI) | face × IR(payment date) × coupon/2 | Yes |
+| 1099-INT | 12 | Amortized bond premium (ABP) | See below | Reduces Box 3 |
+| 1099-OID | 8 | Annual inflation accrual (OID) | face × (IR_end − IR_start) | Yes |
+
+Box 12 ABP only applies if the TIPS was purchased at a premium (adjusted cost > indexed par). It reduces the taxable interest from Box 3 on Schedule B.
 
 ---
 
 ## Data Sources — Always Fetch, Never Guess
 
-| Data needed                                                               | Source                                                                     |
-| ------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
-| Daily ref CPI values                                                      | `https://pub-ba11062b177640459f72e0a88d0261ae.r2.dev/TIPS/RefCpiNsaSa.csv` |
-| Dated-date ref CPI, issue-date ref CPI, unadj price, accrued int per 1000 | `TipsAuctionResults.csv` (project file)                                    |
+| Data needed | Source |
+|---|---|
+| Daily ref CPI values | `https://pub-ba11062b177640459f72e0a88d0261ae.r2.dev/TIPS/RefCpiNsaSa.csv` |
+| Dated-date ref CPI, issue-date IR, unadj price, accrued int per 1000 | `TipsAuctionResults.csv` (project file) |
 
 Use full-precision ref CPIs — no rounding. Never use index ratios from TreasuryDirect XML/PDF for broker OID verification (TD rounds to 5 decimal places and uses 12/31 not 1/1 as year-end).
 
@@ -24,50 +56,147 @@ Use full-precision ref CPIs — no rounding. Never use index ratios from Treasur
 For auction purchases (original or reopening), all inputs from `TipsAuctionResults.csv`:
 
 ```
-adj_cost    = face × IR(issue_date) × (unadj_price / 100)
-accrued_int = face × (adj_accrued_int_per1000 / 1000)
-total_paid  = adj_cost + accrued_int
+indexed_par  = face × IR(issue_date)
+adj_cost     = indexed_par × (unadj_price / 100)
+accrued_int  = face × (adj_accrued_int_per1000 / 1000)
+total_paid   = adj_cost + accrued_int
+bond_premium = adj_cost − indexed_par   (if positive; zero if purchased at discount)
 ```
 
 Match the correct CSV row by CUSIP **and** issue date — multiple rows exist per CUSIP for original auction plus reopenings.
 
 ---
 
-## OID Calculation
+## Box 3: Qualified Stated Interest (Coupon)
 
-Per IRS Pub 1212, annual OID = inflation-adjusted principal on 1/1 of following year minus inflation-adjusted principal on first day held during the year.
+Each semi-annual coupon payment reported in Box 3:
 
 ```
-annual_OID = face × (IR(1/1 next year) - IR(first day held))
-           = face × (refCPI(1/1 next year) - refCPI(first day held)) / refCPI_datedDate
+coupon_payment = face × (coupon_rate / 2) × IR(payment_date)
 ```
+
+Where IR(payment_date) = refCPI(payment_date) / refCPI(dated_date).
+
+The Box 3 annual total is the sum of both semi-annual payments. Note: because this is the actual cash received (inflation-adjusted), the payment will vary each period as inflation changes.
+
+---
+
+## Box 8: OID (Annual Inflation Accrual)
+
+Per IRS Pub 1212, annual OID = inflation-adjusted principal at year-end minus inflation-adjusted principal at start of holding period for the year:
+
+```
+annual_OID = face × (IR(1/1 next year) − IR(first day held this year))
+           = face × (refCPI(1/1 next year) − refCPI(first day held)) / refCPI_dated_date
+```
+
+For the first year held, "first day held" = settlement date. For subsequent years, it is 1/1 of that year.
 
 ### Vanguard — Monthly Breakdown
 
-Vanguard subdivides the annual OID into monthly rows per tax lot, shown in the 1099-OID detail section. Formula for each row:
+Vanguard subdivides the annual OID into monthly rows per tax lot. Formula for each row:
 
 ```
-OID = face × (refCPI_end - refCPI_start) / refCPI_datedDate
+OID = face × (refCPI_end − refCPI_start) / refCPI_dated_date
 ```
 
 **Period structure:**
-
 - Row 1: settlement date → 1st of following month
 - Rows 2–11: 1st of month → 1st of next month
 - Final row: 12/1 → 1/1 of following year
-- If sold/matured during year: final row ends on that settlement/maturity date
+- If sold/matured during year: final row ends on settlement/maturity date
 
-Row 1 may be slightly negative if settlement is near month-end and ref CPI interpolation dips — normal, not an error. Rows sum to the Box 8 total within $0.01 (rounding accumulation).
+Row 1 may be slightly negative if settlement is near month-end and ref CPI interpolation dips — normal, not an error. Rows sum to the Box 8 total within $0.01.
 
 ### Broker Comparison
 
-| Broker         | Breakdown              | Year-end date | Precision                      |
-| -------------- | ---------------------- | ------------- | ------------------------------ |
-| Vanguard       | Monthly rows per lot   | 1/1 ✓         | Full ref CPI                   |
-| Fidelity       | Single total per CUSIP | 1/1 ✓         | Full ref CPI                   |
-| TreasuryDirect | Annual only            | 12/31 ❌       | IR rounded to 5 decimal places |
+| Broker | Breakdown | Year-end date | Precision |
+|---|---|---|---|
+| Vanguard | Monthly rows per lot | 1/1 ✓ | Full ref CPI |
+| Fidelity | Single total per CUSIP | 1/1 ✓ | Full ref CPI |
+| TreasuryDirect | Annual only | 12/31 ❌ | IR rounded to 5 decimal places |
 
 TD 1099-OID is calculated incorrectly per IRS Pub 1212 — always recalculate if using TD figures.
+
+---
+
+## Box 12: Amortized Bond Premium (ABP)
+
+Applies only when TIPS is purchased at a premium (adjusted cost > indexed par on issue date). The bond premium is amortized over the life of the bond and reported annually in 1099-INT Box 12 as a reduction of interest income.
+
+### Bond Premium Calculation
+
+```
+indexed_par  = face × IR(issue_date)
+adj_cost     = indexed_par × (unadj_price / 100)
+bond_premium = adj_cost − indexed_par
+```
+
+### Amortization Method: Constant Yield (Semi-Annual Periods)
+
+The correct method per §171 uses the constant yield method with semi-annual accrual periods coinciding with coupon payment dates (confirmed by FactualFran). Day count convention: Actual/Actual (same as US Treasuries generally).
+
+For each semi-annual period:
+
+```
+frac            = actual_days_in_period / actual_days_in_full_coupon_period
+period_yield    = semi_annual_real_yield × frac
+period_coupon   = (face × coupon_rate / 2) × frac
+interest        = beginning_basis × period_yield
+ABP             = period_coupon − interest
+ending_basis    = beginning_basis − ABP
+```
+
+The semi-annual real yield = real yield to maturity / 2 (from auction results, e.g. -0.340% → -0.170% per period).
+
+The first period is typically a stub (issued mid-period): frac = days from issue to first coupon / days in full coupon period.
+
+The sum of all ABP over the life should equal bond_premium. A small residual (~$0.26 on $233.86 for a 5-year TIPS) is a known artifact of the stub first period under the constant yield method.
+
+### Example: CUSIP 91282CEJ6
+
+0.125% 5-Year TIPS | Issued 4/29/2022 | Matures 4/15/2027 | Face $10,000  
+Unadj price: 102.328775 | IR on issue: 1.00424 | Real yield: -0.340%  
+Indexed par: $10,042.40 | Cost basis: $10,276.26 | Bond premium: $233.86
+
+```
+Payment      Box 3 Coupon   Box 12 ABP    Box 8 OID
+             (1099-INT)     (1099-INT)    (1099-OID)
+-----------  -------------  ------------  ------------
+2022-10-15         6.55729      21.90503
+   Annual          6.55729      21.90503    511.01626
+
+2023-04-15         6.63966      23.68241
+2023-10-15         6.78010      23.64215
+   Annual         13.41976      47.32456    342.23245
+
+2024-04-15         6.84682      23.60196
+2024-10-15         6.96519      23.56184
+   Annual         13.81201      47.16380    282.67724
+
+2025-04-15         7.04652      23.52178
+2025-10-15         7.16024      23.48179
+   Annual         14.20676      47.00358    351.13109
+
+2026-04-15           (n/a)      23.44188
+2026-10-15           (n/a)      23.40202
+   Annual            (n/a)      46.84390       (n/a)
+
+2027-04-15           (n/a)      23.36224
+   Annual            (n/a)      23.36224       (n/a)
+
+Total ABP                      233.60311
+Bond premium                   233.86490  diff=-0.262
+```
+
+Box 3 and Box 8 show n/a for 2026–2027 because ref CPI data is not yet available. Box 12 ABP can be computed through maturity from auction data alone.
+
+### Notes on Broker ABP Reporting
+
+- Brokers may use straight-line rather than constant yield — both methods are permissible under §171, though constant yield is preferred.
+- Straight-line produces very similar annual amounts (e.g., $46.98 vs $47.00 for 2025 in the example above).
+- Both methods produce 2025 ABP ≈ **$47** at $10,000 face for this CUSIP. A broker reporting $52 would be in error.
+- If Box 12 is blank but the supplemental shows a bond premium figure, the broker may have netted it against Box 3 instead — check whether Box 3 equals the gross or net coupon.
 
 ---
 
@@ -77,7 +206,7 @@ All brokers step up TIPS cost basis annually by the OID reported on 1099-OID, so
 
 ```
 original_cost  = face × IR(settlement) × (unadj_price_at_purchase / 100)
-cumulative_OID = face × (IR(today) - IR(settlement_date))
+cumulative_OID = face × (IR(today) − IR(settlement_date))
 adjusted_basis = original_cost + cumulative_OID
 ```
 
@@ -87,41 +216,30 @@ Small discrepancies (a few dollars on $100K face) between calculated and display
 
 ---
 
-## 1099 Items for TIPS in Taxable Accounts
-
-| Form                | Box | What it is                                   | State exempt?      |
-| ------------------- | --- | -------------------------------------------- | ------------------ |
-| 1099-OID            | 8   | Annual inflation accrual                     | Yes                |
-| 1099-INT            | 3   | Semi-annual coupon interest                  | Yes                |
-| 1099-INT supplement | —   | Accrued interest paid at purchase (negative) | Offsets Schedule B |
-| 1099-B              | —   | Gain/loss at sale or maturity                | Varies             |
-
-Accrued interest paid at purchase offsets the first coupon on Schedule B. Broker notes it in the supplement but does not report it to IRS — must be entered manually.
-
----
-
 ## Vanguard Online Statement — TIPS Field Definitions
 
-| Field                              | Meaning                           | Formula                             |
-| ---------------------------------- | --------------------------------- | ----------------------------------- |
-| Price                              | Unadjusted quoted price           | —                                   |
-| Current balance                    | Inflation-adjusted market value   | `face × (unadj_price/100) × IR`     |
-| Remaining balance                  | Inflation-adjusted principal      | `face × IR`                         |
-| Inflation factor / Dec factor TIPS | Index ratio                       | `refCPI(date) / refCPI(datedDate)`  |
-| Accrued interest                   | Accrued coupon since last payment | `face × IR × couponRate × days/180` |
-| Total cost (cost basis)            | OID-adjusted basis                | `original_cost + cumulative_OID`    |
-| Cost per share                     | Adjusted basis per $1 face        | ≈ current IR                        |
-| Long-term capital gain             | Price appreciation only           | `market_value − adjusted_basis`     |
+| Field | Meaning | Formula |
+|---|---|---|
+| Price | Unadjusted quoted price | — |
+| Current balance | Inflation-adjusted market value | `face × (unadj_price/100) × IR` |
+| Remaining balance | Inflation-adjusted principal | `face × IR` |
+| Inflation factor / Dec factor TIPS | Index ratio | `refCPI(date) / refCPI(datedDate)` |
+| Accrued interest | Accrued coupon since last payment | `face × IR × couponRate × days/180` |
+| Total cost (cost basis) | OID-adjusted basis | `original_cost + cumulative_OID` |
+| Cost per share | Adjusted basis per $1 face | ≈ current IR |
+| Long-term capital gain | Price appreciation only | `market_value − adjusted_basis` |
 
 ---
 
 ## Verification Workflow
 
-1. Identify CUSIP → look up in `TipsAuctionResults.csv`: dated date, `ref_cpi_on_dated_date`, issue date, `unadj_price`, `adj_accrued_int_per1000`.
+1. Identify CUSIP → look up in `TipsAuctionResults.csv`: dated date, `ref_cpi_on_dated_date`, issue date, `unadj_price`, `adj_accrued_int_per1000`, real yield.
 2. Fetch ref CPI CSV for all daily values needed.
-3. Calculate from formulas above.
-4. **If a row doesn't match:** work backwards — `implied_refCPI_end = (OID × refCPI_datedDate / face) + refCPI_start` — then look up that value in the CSV to identify the correct end date. Do not guess dates.
-5. Never assume broker is wrong before verifying your own inputs.
+3. Calculate Box 3 (QSI), Box 8 (OID), and Box 12 (ABP) from formulas above.
+4. **If Box 8 doesn't match:** work backwards — `implied_refCPI_end = (OID × refCPI_datedDate / face) + refCPI_start` — then look up that value in the CSV to identify the correct end date. Do not guess dates.
+5. **If Box 3 doesn't match:** confirm face value. Box 3 = face × (coupon/2) × IR(payment date). An apparent mismatch often reveals the correct face value.
+6. **If Box 12 doesn't match:** check whether broker used straight-line vs constant yield, and whether the starting premium was computed correctly (must use indexed par, not flat par).
+7. Never assume broker is wrong before verifying your own inputs.
 
 ---
 
