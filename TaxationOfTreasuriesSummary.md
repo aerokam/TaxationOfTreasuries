@@ -39,7 +39,7 @@ All Treasury interest is federally taxable at ordinary income rates and exempt f
 
 **De minimis discount** — Discount smaller than 0.25% × face value × years to maturity. Treated as capital gain at maturity, not ordinary income. Bonds bought at original auction typically have only a de minimis discount. *Example: A $10,000 bond with 5 years to maturity has a de minimis threshold of $10,000 × 0.0025 × 5 = $125. A discount ≤$125 is de minimis (taxed as capital gain); a discount >$125 triggers ordinary income treatment (AMD).*[^pub550-mdb]
 
-**Amortized bond premium (ABP)** — You paid more than face value. Default: broker amortizes premium and reduces reported coupon interest annually via 1099-INT Box 12 for Treasuries. This reduces taxable interest each year; no capital loss at maturity. Alternative: you can elect NOT to amortize the premium (IRS Form 4952 or similar election depending on your tax software), in which case the premium is treated as a capital loss at maturity. Amortization is almost always optimal for Treasuries because it converts an accrual-basis reduction annually rather than a capital loss (which is less valuable). Rarely, if you have substantial capital gains elsewhere, you might elect not to amortize to avoid losing the benefit of the annual reduction. Consult a tax professional if you want to explore this.[^pub550-premium]
+**Amortized bond premium (ABP)** — You paid more than face value. Default: broker amortizes premium and reduces reported coupon interest annually. Most brokers (Vanguard, Fidelity) report ABP in 1099-INT Box 12; some brokers (Schwab reported; details pending) report ABP in 1099-OID Box 10 when they also report QSI in 1099-OID Box 2 — IRS rules require these to be on the same form. This reduces taxable interest each year; no capital loss at maturity. Alternative: you can elect NOT to amortize the premium (IRS Form 4952 or similar election depending on your tax software), in which case the premium is treated as a capital loss at maturity. Amortization is almost always optimal for Treasuries because it converts an accrual-basis reduction annually rather than a capital loss (which is less valuable). Rarely, if you have substantial capital gains elsewhere, you might elect not to amortize to avoid losing the benefit of the annual reduction. Consult a tax professional if you want to explore this.[^pub550-premium]
 
 **Accrued market discount (AMD)** — The portion of market discount accrued while you held the bond. Reported in 1099-B Box 1f upon disposal. Treated as ordinary interest income (not capital gain) on your federal return; enters on Schedule B.[^1099b-instructions] State tax treatment varies and is unsettled in many states — most states exempt it as Treasury interest, but consult your state's rules.
 
@@ -53,11 +53,11 @@ All Treasury interest is federally taxable at ordinary income rates and exempt f
 
 The simplest case. See [Finance Buff: Which Treasury to Buy While Keeping Your Taxes Simple](https://thefinancebuff.com/buy-treasury-simple-taxes.html).
 
-- Each year: coupon interest on 1099-INT Box 3. Import and file. Done, if the taxpayer uses the cash method of reporting interest (as most individuals do). An alternative is the accrual method, under which interest is reported for the year it is earned, whether or not received during the year.
+- Each year: coupon interest on 1099-INT Box 3. Import and file. Done.
 - At auction, price is typically at a slight discount to par (de minimis).
 - At maturity: the tiny de minimis discount produces a small capital gain reported on 1099-B (Schedule D), or the broker may fold it into Box 3. De minimis discount is NOT treated as AMD — it is treated as capital gain, not ordinary interest, and carries no state ambiguity.
 - The interest accrued between dated date and issue date is small (typically a few days to a couple weeks of coupon interest). You should subtract it from first coupon year's Schedule B to be accurate, but if you forget it, the tax impact is minor because the amount is small—unlike reopenings or secondary market purchases, where accrued interest can be material. The Finance Buff article glosses over this, but the most accurate approach is to do as indicated here.
-- No AMD. There will be a premium if the yield determined by the original auction is less than the minimum interest rate of 0.125%.
+- No AMD, no market premium complications.
 - State return: exact handling depends on the tax software used.
 
 ### Scenario 2: Reopening Auction → Hold to Maturity (T-Notes/Bonds)
@@ -74,7 +74,7 @@ Looks like buying at original auction but has complications. Reopening auctions 
 
 - Subsequent years: normal coupon interest on 1099-INT Box 3.
 
-- Price may be at a premium or discount to par depending on the yield of the auction and the interest rate of the reopened Note/Bond. If discount > de minimis: AMD applies at maturity (see Scenario 5 below), unless the taxpayer chooses to accrue the discount over each year. If a premium was paid: broker amortizes via Box 12, unless taxpayer directs the broker not to amortize premiums.
+- Price may be at a premium or discount to par. If discount > de minimis: AMD applies at maturity (see Scenario 5 below). If premium: broker amortizes via Box 12.
 
 - At maturity: any AMD in 1099-B Box 1f must be moved to Schedule B as interest income (see tax software section below).
 
@@ -196,7 +196,7 @@ All of the above applies to TIPS, plus:
 - Deflation year: if CPI falls, negative OID reduces your taxable income (shown as negative in Box 8 or as an adjustment). Cannot reduce below zero for the year.
 - At maturity: you receive the inflation-adjusted principal. No additional tax on the principal increase at that point — it was already taxed annually via OID.
 - Acquisition premium on TIPS (secondary market): if you paid more than inflation-adjusted par, that acquisition premium offsets OID each year. Broker tracks this; reported in 1099-OID Box 6.[^pub1212]
-- TIPS bought at auction, either original or reopening, can have accrued interest. With TIPS held in a taxable account, the inflation adjustment to principal during a year is reported by the broker to the taxpayer and the IRS on Form 1099-OID.
+- TIPS bought at reopening auction: same accrued interest complications as nominal bonds, plus OID complications. Avoided by buying only at original TIPS auctions and holding to maturity.
 
 ---
 
@@ -209,7 +209,7 @@ All of the above applies to TIPS, plus:
 | AMD at disposal                 | 1099-B Box 1f                           | Form 8949 (Code D) + Schedule B as interest | Manual intervention required   |
 | Capital gain/loss (non-AMD)     | 1099-B                                  | Schedule D                                  | —                              |
 | Accrued interest paid to seller | 1099 supplement only (not IRS-reported) | Schedule B subtraction (manual)             | —                              |
-| Premium amortization            | 1099-INT Box 12                         | Reduces Box 3 interest on Schedule B        | —                              |
+| Premium amortization            | 1099-INT Box 12 (common) or 1099-OID Box 10 (alternative — e.g., Schwab, details pending) | Reduces Box 3 or Box 2 interest on Schedule B | —                              |
 
 ---
 
@@ -223,9 +223,11 @@ All of the above applies to TIPS, plus:
 
 ### 1099-INT Items
 
-#### 1. ABP — Amortizable Bond Premium (1099-INT Box 12)
+#### 1. ABP — Amortizable Bond Premium (1099-INT Box 12 or 1099-OID Box 10)
 
-Applies when you bought at a premium (above face value). The broker amortizes the premium annually and reports it in Box 12, reducing your taxable coupon interest. The broker handles the calculation — you need to confirm your tax software picks it up correctly.
+Applies when you bought at a premium (above face value). The broker amortizes the premium annually, reducing your taxable coupon interest. Most brokers (Vanguard, Fidelity) report ABP in 1099-INT Box 12. Some brokers (Schwab reported; details pending) report ABP in 1099-OID Box 10 instead — this happens when the broker also reports QSI in 1099-OID Box 2 rather than 1099-INT Box 3. The broker handles the calculation — you need to confirm your tax software picks it up correctly.
+
+The guidance below covers the common configuration (Box 12). If your broker uses Box 10, tax software handling is unknown — community input needed.
 
 **TurboTax:** Unknown — community input needed.
 
@@ -322,7 +324,8 @@ If you bought TIPS at a premium on the secondary market, the acquisition premium
 
 | Item | Form / Box | TurboTax | H&R Block |
 |---|---|---|---|
-| ABP | 1099-INT Box 12 | Unknown | Manual — two-screen entry |
+| ABP (common config) | 1099-INT Box 12 | Unknown | Manual — two-screen entry |
+| ABP (alternative config) | 1099-OID Box 10 | Unknown | Unknown |
 | Accrued interest paid | 1099 supplement | Manual — negative adjustment | Manual — negative adjustment |
 | ABP + accrued interest | — | Unknown | Manual — split into two entries |
 | AMD → Schedule B | 1099-B Box 1f | Auto (one-by-one entry only) | Manual — dummy 1099-INT Box 3 |
@@ -364,7 +367,7 @@ Scenario 1 (and its TIPS equivalent) is the only one requiring no manual adjustm
 
 - State treatment of AMD on Treasuries is unsettled in several states (notably NY). The dominant view is that AMD, being reclassified as Treasury interest income, should be state-exempt, but no definitive ruling exists in all states. See the extended discussion on NY in this thread and the linked NY-specific thread.
 - Tax software behavior can change year to year. Verify your software is handling AMD correctly before filing.
-- This is a summary of general principles. IRS Publication 550 has additional information. Like other IRS Publications, it is not as authoritative as tax laws, regulations, and court rulings. Consult a tax professional for your specific situation.
+- This is a summary of general principles. IRS Publication 550 is the authoritative source. Consult a tax professional for your specific situation.
 
 ---
 

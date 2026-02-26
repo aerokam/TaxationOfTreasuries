@@ -28,6 +28,15 @@ Per IRS Instructions for Forms 1099-INT and 1099-OID:
 
 Brokers elect either (a) report QSI on 1099-INT Box 3 and OID on 1099-OID Box 8, or (b) report both on 1099-OID (Box 2 and Box 8). In practice virtually all brokers use option (a).
 
+**ABP reporting is tied to QSI reporting — the two cannot be split across forms.** Per the same IRS instructions: if a broker reports QSI in 1099-OID Box 2, it must report ABP in 1099-OID Box 10 and may not report ABP on 1099-INT. Box 10 explicitly covers TIPS: *"For a taxable covered security, including a Treasury inflation-protected security, shows the amount of premium amortization allocable to the interest payment(s)."*
+
+| Broker configuration | QSI | ABP |
+|---|---|---|
+| Common (e.g., Vanguard, Fidelity) | 1099-INT Box 3 | 1099-INT Box 12 |
+| Alternative | 1099-OID Box 2 | 1099-OID Box 10 |
+
+Schwab has been reported to use the alternative configuration (ABP in 1099-OID Box 10); details pending confirmation.
+
 ---
 
 ## The Three Taxable Items for TIPS Held in Taxable Accounts
@@ -35,10 +44,12 @@ Brokers elect either (a) report QSI on 1099-INT Box 3 and OID on 1099-OID Box 8,
 | Form | Box | What it is | Formula | State exempt? |
 |---|---|---|---|---|
 | 1099-INT | 3 | Semi-annual coupon (QSI) | face × IR(payment date) × coupon/2 | Yes |
-| 1099-INT | 12 | Amortized bond premium (ABP) | See below | Reduces Box 3 |
+| 1099-INT | 12 | Amortized bond premium (ABP) — common config | See below | Reduces Box 3 |
+| 1099-OID | 2 | Semi-annual coupon (QSI) — alternative config | same formula | Yes |
 | 1099-OID | 8 | Annual inflation accrual (OID) | face × (IR_end − IR_start) | Yes |
+| 1099-OID | 10 | Amortized bond premium (ABP) — alternative config | See below | Reduces Box 2 |
 
-Box 12 ABP only applies if the TIPS was purchased at a premium (adjusted cost > indexed par). It reduces the taxable interest from Box 3 on Schedule B.
+Box 12 (or Box 10 if your broker uses the alternative configuration) applies only if the TIPS was purchased at a premium (adjusted cost > indexed par). It reduces the taxable interest on Schedule B.
 
 ---
 
@@ -216,6 +227,7 @@ ABP figures per #Cruncher and FactualFran; use of `indexed_par × (coupon_rate /
 - Straight-line produces similar but slightly different annual amounts (e.g., ~$46.98 vs $47.06 for 2025).
 - The correct 2025 ABP at $10,000 face for this CUSIP is **$47.056** (~$47). A broker reporting $52 would be in error — $52 corresponds to ~$11,000 face.
 - If Box 12 is blank but the supplemental shows a bond premium figure, the broker may have netted it against Box 3 instead — check whether Box 3 equals the gross or net coupon.
+- Some brokers (Schwab reported; details pending) use the alternative configuration and report ABP in 1099-OID Box 10 rather than 1099-INT Box 12. If Box 12 is blank and there is no netting against Box 3, check 1099-OID Box 10.
 
 ---
 
