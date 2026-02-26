@@ -6,6 +6,8 @@
 
 **Adds:** Regulatory basis for 1099 reporting, qualified stated interest definition, OID calculation detail, amortized bond premium (ABP) calculation, broker 1099 reporting differences, cost basis step-up, online statement field interpretation, data sources, verification workflow.
 
+> **All examples in this document are for illustrative and verification purposes only. Never use hardcoded example values as algorithmic inputs. Always source inputs from `TipsAuctionResults.csv` and the ref CPI CSV as specified in Data Sources.**
+
 ---
 
 ## Regulatory Basis
@@ -167,6 +169,8 @@ ending_basis    = beginning_basis − ABP
 The sum of all ABP over the life equals bond_premium to within rounding (e.g., 233.864 vs 233.865 for the example below — essentially exact, unlike the flat-coupon approach which left a $0.26 residual).
 
 ### Example: CUSIP 91282CEJ6
+
+> **Verification only. All inputs below were sourced from `TipsAuctionResults.csv` and the ref CPI CSV. Do not hardcode these values.**
 
 0.125% 5-Year TIPS | Issued 4/29/2022 | Matures 4/15/2027 | Face $10,000  
 Unadj price: 102.328775 | IR on issue: 1.00424 | Real yield: -0.340%  
