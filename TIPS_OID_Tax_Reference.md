@@ -134,24 +134,37 @@ bond_premium = adj_cost − indexed_par
 
 ### Amortization Method: Constant Yield (Semi-Annual Periods)
 
-The correct method per §171 uses the constant yield method with semi-annual accrual periods coinciding with coupon payment dates (confirmed by FactualFran). Day count convention: Actual/Actual (same as US Treasuries generally).
+The correct method per §171 uses the constant yield method with semi-annual accrual periods coinciding with coupon payment dates (confirmed by FactualFran and #Cruncher). Day count convention: Actual/Actual (US Treasury standard).
 
-For each semi-annual period:
+Key inputs:
+```
+interest_per_period = indexed_par × (coupon_rate / 2)   ← uses indexed par, NOT face
+semi_annual_yield   = real_yield_to_maturity / 2
+```
+
+Note: the coupon used in the ABP formula is `indexed_par × (coupon_rate / 2)`, not `face × (coupon_rate / 2)`. This reflects the actual QSI payment on inflation-adjusted principal per Reg. §1.1275-7(d), and produces a near-perfect amortization match to the original premium.
+
+**First period (stub):** TIPS are typically issued mid-period. The first coupon period runs from the dated date (COUPPCD) to the first coupon date (COUPNCD).
 
 ```
-frac            = actual_days_in_period / actual_days_in_full_coupon_period
-period_yield    = semi_annual_real_yield × frac
-period_coupon   = (face × coupon_rate / 2) × frac
-interest        = beginning_basis × period_yield
-ABP             = period_coupon − interest
+days_in_period      = first_coupon_date − dated_date
+days_before_issued  = issue_date − dated_date
+days_after_issued   = first_coupon_date − issue_date
+
+accrued_at_issue    = interest_per_period × (days_before_issued / days_in_period)
+constant_yield_first = cost × (semi_annual_yield) × (days_after_issued / days_in_period)
+ABP_first           = interest_per_period − accrued_at_issue − constant_yield_first
+ending_basis        = cost − ABP_first
+```
+
+**Subsequent regular periods:**
+```
+constant_yield  = beginning_basis × semi_annual_yield
+ABP             = interest_per_period − constant_yield
 ending_basis    = beginning_basis − ABP
 ```
 
-The semi-annual real yield = real yield to maturity / 2 (from auction results, e.g. -0.340% → -0.170% per period).
-
-The first period is typically a stub (issued mid-period): frac = days from issue to first coupon / days in full coupon period.
-
-The sum of all ABP over the life should equal bond_premium. A small residual (~$0.26 on $233.86 for a 5-year TIPS) is a known artifact of the stub first period under the constant yield method.
+The sum of all ABP over the life equals bond_premium to within rounding (e.g., 233.864 vs 233.865 for the example below — essentially exact, unlike the flat-coupon approach which left a $0.26 residual).
 
 ### Example: CUSIP 91282CEJ6
 
@@ -163,39 +176,41 @@ Indexed par: $10,042.40 | Cost basis: $10,276.26 | Bond premium: $233.86
 Payment      Box 3 Coupon   Box 12 ABP    Box 8 OID
              (1099-INT)     (1099-INT)    (1099-OID)
 -----------  -------------  ------------  ------------
-2022-10-15         6.55729      21.90503
-   Annual          6.55729      21.90503    511.01626
+2022-10-15         6.55729      21.92950
+   Annual          6.55729      21.92950    511.01626
 
-2023-04-15         6.63966      23.68241
-2023-10-15         6.78010      23.64215
-   Annual         13.41976      47.32456    342.23245
+2023-04-15         6.63966      23.70887
+2023-10-15         6.78010      23.66857
+   Annual         13.41976      47.37744    342.23245
 
-2024-04-15         6.84682      23.60196
-2024-10-15         6.96519      23.56184
-   Annual         13.81201      47.16380    282.67724
+2024-04-15         6.84682      23.62833
+2024-10-15         6.96519      23.58816
+   Annual         13.81201      47.21649    282.67724
 
-2025-04-15         7.04652      23.52178
-2025-10-15         7.16024      23.48179
-   Annual         14.20676      47.00358    351.13109
+2025-04-15         7.04652      23.54806
+2025-10-15         7.16024      23.50803
+   Annual         14.20676      47.05609    351.13109
 
-2026-04-15           (n/a)      23.44188
-2026-10-15           (n/a)      23.40202
-   Annual            (n/a)      46.84390       (n/a)
+2026-04-15           (n/a)      23.46807
+2026-10-15           (n/a)      23.42817
+   Annual            (n/a)      46.89623       (n/a)
 
-2027-04-15           (n/a)      23.36224
-   Annual            (n/a)      23.36224       (n/a)
+2027-04-15           (n/a)      23.38834
+   Annual            (n/a)      23.38834       (n/a)
 
-Total ABP                      233.60311
-Bond premium                   233.86490  diff=-0.262
+Total ABP                      233.86409
+Bond premium                   233.86490  diff=-0.00081
 ```
 
 Box 3 and Box 8 show n/a for 2026–2027 because ref CPI data is not yet available. Box 12 ABP can be computed through maturity from auction data alone.
 
+ABP figures per #Cruncher and FactualFran; use of `indexed_par × (coupon_rate / 2)` as the per-period coupon produces a near-perfect total match to the bond premium.
+
 ### Notes on Broker ABP Reporting
 
 - Brokers may use straight-line rather than constant yield — both methods are permissible under §171, though constant yield is preferred.
-- Straight-line produces very similar annual amounts (e.g., $46.98 vs $47.00 for 2025 in the example above).
-- Both methods produce 2025 ABP ≈ **$47** at $10,000 face for this CUSIP. A broker reporting $52 would be in error.
+- Straight-line produces similar but slightly different annual amounts (e.g., ~$46.98 vs $47.06 for 2025).
+- The correct 2025 ABP at $10,000 face for this CUSIP is **$47.056** (~$47). A broker reporting $52 would be in error — $52 corresponds to ~$11,000 face.
 - If Box 12 is blank but the supplemental shows a bond premium figure, the broker may have netted it against Box 3 instead — check whether Box 3 equals the gross or net coupon.
 
 ---
