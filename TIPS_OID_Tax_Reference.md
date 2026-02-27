@@ -1,12 +1,27 @@
 # TIPS OID and Tax Reference
 
-## Dependencies
+## Table of Contents
 
-**Requires:** 2_1_TIPS_Basics.md (ref CPI formula, index ratio, adjusted principal), TaxationOfTreasuries.md (TIPS OID tax treatment overview)
-
-**Adds:** Regulatory basis for 1099 reporting, qualified stated interest definition, OID calculation detail, amortized bond premium (ABP) calculation, broker 1099 reporting differences, cost basis step-up, online statement field interpretation, data sources, verification workflow.
-
-> **All examples in this document are for illustrative and verification purposes only. Never use hardcoded example values as algorithmic inputs. Always source inputs from `TipsAuctionResults.csv` and the ref CPI CSV as specified in Data Sources.**
+1. [Regulatory Basis](#regulatory-basis)
+   - [Qualified Stated Interest — Treas. Reg. §1.1275-7(d)](#qualified-stated-interest--treas-reg-112757d)
+   - [Form 1099 Reporting Authority](#form-1099-reporting-authority)
+2. [The Three Taxable Items for TIPS Held in Taxable Accounts](#the-three-taxable-items-for-tips-held-in-taxable-accounts)
+3. [Purchase Cost Formula](#purchase-cost-formula)
+4. [Box 3: Qualified Stated Interest (Coupon)](#box-3-qualified-stated-interest-coupon)
+5. [Box 8: OID (Annual Inflation Accrual)](#box-8-oid-annual-inflation-accrual)
+   - [Vanguard — Monthly Breakdown](#vanguard--monthly-breakdown)
+   - [Broker Comparison](#broker-comparison)
+6. [Box 12: Amortized Bond Premium (ABP)](#box-12-amortized-bond-premium-abp)
+   - [Bond Premium Calculation](#bond-premium-calculation)
+   - [Amortization Method: Constant Yield (Semi-Annual Periods)](#amortization-method-constant-yield-semi-annual-periods)
+   - [Example: CUSIP 91282CEJ6](#example-cusip-91282cej6)
+   - [Notes on Broker ABP Reporting](#notes-on-broker-abp-reporting)
+7. [Cost Basis Step-Up](#cost-basis-step-up)
+8. [Vanguard Online Statement — TIPS Field Definitions](#vanguard-online-statement--tips-field-definitions)
+9. [Broker Error Case Studies](#broker-error-case-studies)
+   - [Schwab — CUSIP 91282CDX6](#broker-error-case-study-schwab--cusip-91282cdx6)
+10. [Agent Instructions](#agent-instructions)
+    - [Dependencies](#dependencies)
 
 ---
 
@@ -26,16 +41,17 @@ Per IRS Instructions for Forms 1099-INT and 1099-OID:
 
 > "You may report any qualified stated interest on Treasury Inflation Protected Securities in box 3 of Form 1099-INT rather than in box 2 of Form 1099-OID."
 
-Brokers elect either (a) report QSI on 1099-INT Box 3 and OID on 1099-OID Box 8, or (b) report both on 1099-OID (Box 2 and Box 8). In practice virtually all brokers use option (a).
+Brokers elect either (a) report QSI on 1099-INT Box 3 and OID on 1099-OID Box 8, or (b) report both on 1099-OID (Box 2 and Box 8). Among the three major brokers, Vanguard and Fidelity use option (a); Schwab uses a hybrid (QSI on 1099-INT Box 3, ABP on 1099-OID Box 10 — see table below).
 
 **ABP reporting is tied to QSI reporting — the two cannot be split across forms.** Per the same IRS instructions: if a broker reports QSI in 1099-OID Box 2, it must report ABP in 1099-OID Box 10 and may not report ABP on 1099-INT. Box 10 explicitly covers TIPS: *"For a taxable covered security, including a Treasury inflation-protected security, shows the amount of premium amortization allocable to the interest payment(s)."*
 
 | Broker configuration | QSI | ABP |
 |---|---|---|
 | Common (e.g., Vanguard, Fidelity) | 1099-INT Box 3 | 1099-INT Box 12 |
-| Alternative | 1099-OID Box 2 | 1099-OID Box 10 |
+| Alternative (per IRS instructions) | 1099-OID Box 2 | 1099-OID Box 10 |
+| Schwab (confirmed) | 1099-INT Box 3 | 1099-OID Box 10 |
 
-Schwab has been reported to use the alternative configuration (ABP in 1099-OID Box 10); details pending confirmation.
+Schwab uses a hybrid configuration: QSI in 1099-INT Box 3 (not Box 2), ABP in 1099-OID Box 10. This does not match either standard configuration defined in the IRS instructions — the IRS rule pairs Box 2 with Box 10, but Schwab reports QSI on 1099-INT while placing ABP on 1099-OID. The practical effect is correct (ABP reduces interest income), but the split across forms is non-standard. Confirmed via Bogleheads forum (CUSIP 91282CDX6, $88,000 face). → [See Schwab ABP error case study](#broker-error-case-study-schwab--cusip-91282cdx6)
 
 ---
 
@@ -47,20 +63,9 @@ Schwab has been reported to use the alternative configuration (ABP in 1099-OID B
 | 1099-INT | 12 | Amortized bond premium (ABP) — common config | See below | Reduces Box 3 |
 | 1099-OID | 2 | Semi-annual coupon (QSI) — alternative config | same formula | Yes |
 | 1099-OID | 8 | Annual inflation accrual (OID) | face × (IR_end − IR_start) | Yes |
-| 1099-OID | 10 | Amortized bond premium (ABP) — alternative config | See below | Reduces Box 2 |
+| 1099-OID | 10 | Amortized bond premium (ABP) — alternative/Schwab config | See below | Reduces Box 2 or Box 3 |
 
-Box 12 (or Box 10 if your broker uses the alternative configuration) applies only if the TIPS was purchased at a premium (adjusted cost > indexed par). It reduces the taxable interest on Schedule B.
-
----
-
-## Data Sources — Always Fetch, Never Guess
-
-| Data needed | Source |
-|---|---|
-| Daily ref CPI values | `https://pub-ba11062b177640459f72e0a88d0261ae.r2.dev/TIPS/RefCpiNsaSa.csv` |
-| Dated-date ref CPI, issue-date IR, unadj price, accrued int per 1000 | `TipsAuctionResults.csv` (project file) |
-
-Use full-precision ref CPIs — no rounding. Never use index ratios from TreasuryDirect XML/PDF for broker OID verification (TD rounds to 5 decimal places and uses 12/31 not 1/1 as year-end).
+Box 12 (or Box 10 if your broker uses the alternative or Schwab configuration) applies only if the TIPS was purchased at a premium (adjusted cost > indexed par). It reduces the taxable interest on Schedule B.
 
 ---
 
@@ -123,19 +128,19 @@ Row 1 may be slightly negative if settlement is near month-end and ref CPI inter
 
 ### Broker Comparison
 
-| Broker | Breakdown | Year-end date | Precision |
-|---|---|---|---|
-| Vanguard | Monthly rows per lot | 1/1 ✓ | Full ref CPI |
-| Fidelity | Single total per CUSIP | 1/1 ✓ | Full ref CPI |
-| TreasuryDirect | Annual only | 12/31 ❌ | IR rounded to 5 decimal places |
+| Broker | Breakdown | Year-end date |
+|---|---|---|
+| Vanguard | Monthly rows per lot | 1/1 ✓ |
+| Fidelity | Single total per CUSIP | 1/1 ✓ |
+| TreasuryDirect | Annual only | 12/31 ❌ |
 
-TD 1099-OID is calculated incorrectly per IRS Pub 1212 — always recalculate if using TD figures.
+TD 1099-OID is calculated incorrectly per IRS Pub 1212 — always recalculate if using TD figures. (TD uses 12/31 as year-end; IRS Pub 1212 requires the ref CPI for 1/1 of the following year.)
 
 ---
 
 ## Box 12: Amortized Bond Premium (ABP)
 
-Applies only when TIPS is purchased at a premium (adjusted cost > indexed par on issue date). The bond premium is amortized over the life of the bond and reported annually in 1099-INT Box 12 as a reduction of interest income.
+Applies only when TIPS is purchased at a premium (adjusted cost > indexed par on issue date). The bond premium is amortized over the life of the bond and reported annually in 1099-INT Box 12 (or 1099-OID Box 10 for Schwab) as a reduction of interest income.
 
 ### Bond Premium Calculation
 
@@ -160,14 +165,14 @@ Note: the coupon used in the ABP formula is `indexed_par × (coupon_rate / 2)`, 
 **First period (stub):** TIPS are typically issued mid-period. The first coupon period runs from the dated date (COUPPCD) to the first coupon date (COUPNCD).
 
 ```
-days_in_period      = first_coupon_date − dated_date
-days_before_issued  = issue_date − dated_date
-days_after_issued   = first_coupon_date − issue_date
+days_in_period       = first_coupon_date − dated_date
+days_before_issued   = issue_date − dated_date
+days_after_issued    = first_coupon_date − issue_date
 
-accrued_at_issue    = interest_per_period × (days_before_issued / days_in_period)
+accrued_at_issue     = interest_per_period × (days_before_issued / days_in_period)
 constant_yield_first = cost × (semi_annual_yield) × (days_after_issued / days_in_period)
-ABP_first           = interest_per_period − accrued_at_issue − constant_yield_first
-ending_basis        = cost − ABP_first
+ABP_first            = interest_per_period − accrued_at_issue − constant_yield_first
+ending_basis         = cost − ABP_first
 ```
 
 **Subsequent regular periods:**
@@ -227,7 +232,8 @@ ABP figures per #Cruncher and FactualFran; use of `indexed_par × (coupon_rate /
 - Straight-line produces similar but slightly different annual amounts (e.g., ~$46.98 vs $47.06 for 2025).
 - The correct 2025 ABP at $10,000 face for this CUSIP is **$47.056** (~$47). A broker reporting $52 would be in error — $52 corresponds to ~$11,000 face.
 - If Box 12 is blank but the supplemental shows a bond premium figure, the broker may have netted it against Box 3 instead — check whether Box 3 equals the gross or net coupon.
-- Some brokers (Schwab reported; details pending) use the alternative configuration and report ABP in 1099-OID Box 10 rather than 1099-INT Box 12. If Box 12 is blank and there is no netting against Box 3, check 1099-OID Box 10.
+- Schwab (confirmed) reports ABP in 1099-OID Box 10, not 1099-INT Box 12. If Box 12 is blank and Box 3 is not netted, check 1099-OID Box 10.
+- Schwab has been observed applying ABP to only a fraction of the held position in later years, producing materially understated Box 10 values. The error pattern resembles applying the ABP rate to roughly half the actual face. If Schwab's Box 10 drops significantly from year 2 to year 3 without a corresponding position change, recalculate independently. → [See Schwab ABP error case study](#broker-error-case-study-schwab--cusip-91282cdx6)
 
 ---
 
@@ -262,7 +268,84 @@ Small discrepancies (a few dollars on $100K face) between calculated and display
 
 ---
 
-## Verification Workflow
+## Broker Error Case Studies
+
+### Broker Error Case Study: Schwab — CUSIP 91282CDX6
+
+> **Verification only. All inputs sourced from `TipsAuctionResults.csv`. Do not hardcode these values.**
+
+**Summary:** Schwab reported correct ABP for 2022–2023, then silently dropped to roughly 55% of the correct value in 2024 and 2025, consistent with applying the ABP rate to a partial lot. The holder independently calculated correct values and is seeking corrected 1099-OIDs. Schwab had previously self-corrected a 2022 error (original Box 10 = $0; corrected to $282.24 in Nov 2023).
+
+**Position details:**  
+0.125% 10-Year TIPS | Dated 2022-01-15 | Issued 2022-01-31 | Matures 2032-01-15  
+Face: $88,000 | Real yield: −0.540% | Unadj price: 106.811231 | IR on issue: 1.00253  
+Indexed par: $88,222.64 | Adj cost: $94,231.69 | Bond premium: $6,009.05
+
+**ABP comparison (1099-OID Box 10):**
+
+```
+Year   Correct (calc)   Schwab reported   Schwab error
+2022       282.20           282.24          ~+0.04 (immaterial; self-corrected from $0)
+2023       616.77           616.77          none
+2024       613.45           339.11          −274.34 (understated ~45%)
+2025       610.14           350.19          −259.95 (understated ~43%)
+```
+
+Correct values confirmed independently by holder (Klewles) and verified against `TipsAuctionResults.csv` using the constant yield method per §171 and Reg. §1.1275-7(d).
+
+**Calculation inputs used:**
+```
+semi_annual_yield   = −0.540% / 2 = −0.270%
+coupon_per_period   = $88,222.64 × (0.125% / 2) = $55.139
+stub period         = 2022-01-31 issue → 2022-07-15 first coupon (165 days of 181-day period)
+```
+
+**Annual ABP schedule (constant yield, full term):**
+
+```
+Year    ABP
+2022    282.20
+2023    616.77
+2024    613.45
+2025    610.14
+2026    606.85
+2027    603.57
+2028    600.32
+2029    597.08
+2030    593.86
+2031    590.66
+2032    294.13
+Total  6009.04   (bond premium 6009.05 — diff $0.01, rounding)
+```
+
+**Reporting configuration confirmed:** Schwab reported QSI in 1099-INT Box 3 and ABP in 1099-OID Box 10 (no Box 2 entry). This confirms the hybrid configuration documented in the broker table above.
+
+**Remediation:** Request corrected 1099-OID from Schwab for each affected year. If Schwab does not correct, the taxpayer may use the independently calculated figure and attach a statement. Source: Bogleheads forum, post by Klewles, thread "Taxation of Treasury bills, notes and bonds."
+
+---
+
+## Agent Instructions
+
+> This section is for automated use only. Human readers can skip it.
+
+**Examples caveat:** All examples in this document are for illustrative and verification purposes only. Never use hardcoded example values as algorithmic inputs. Always source inputs from `TipsAuctionResults.csv` and the ref CPI CSV as specified below.
+
+### Dependencies
+
+**Requires:** 2_1_TIPS_Basics.md (ref CPI formula, index ratio, adjusted principal), TaxationOfTreasuries.md (TIPS OID tax treatment overview)
+
+**Adds:** Regulatory basis for 1099 reporting, qualified stated interest definition, OID calculation detail, amortized bond premium (ABP) calculation, broker 1099 reporting differences, cost basis step-up, online statement field interpretation, verification workflow.
+
+### Data Sources — Always Fetch, Never Guess
+
+| Data needed | Source |
+|---|---|
+| Daily ref CPI values | `https://pub-ba11062b177640459f72e0a88d0261ae.r2.dev/TIPS/RefCpiNsaSa.csv` |
+| Dated-date ref CPI, issue-date IR, unadj price, accrued int per 1000 | `TipsAuctionResults.csv` (project file) |
+
+Ref CPI values are rounded to 5 decimal places in the CSV — use them as-is. Never use index ratios from TreasuryDirect XML/PDF for broker OID verification (TD rounds IR to 5 decimal places and uses 12/31 not 1/1 as year-end).
+
+### Verification Workflow
 
 1. Identify CUSIP → look up in `TipsAuctionResults.csv`: dated date, `ref_cpi_on_dated_date`, issue date, `unadj_price`, `adj_accrued_int_per1000`, real yield.
 2. Fetch ref CPI CSV for all daily values needed.
@@ -272,8 +355,6 @@ Small discrepancies (a few dollars on $100K face) between calculated and display
 6. **If Box 12 doesn't match:** check whether broker used straight-line vs constant yield, and whether the starting premium was computed correctly (must use indexed par, not flat par).
 7. Never assume broker is wrong before verifying your own inputs.
 
----
-
-## Project File Access Rule
+### Project File Access Rule
 
 For any content in project files including PDFs: **use `project_knowledge_search` first.** It reads PDFs and all project files. Do not attempt bash-based PDF extraction.
