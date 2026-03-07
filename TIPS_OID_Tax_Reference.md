@@ -49,9 +49,11 @@ Brokers elect either (a) report QSI on 1099-INT Box 3 and OID on 1099-OID Box 8,
 
 **ABP reporting is tied to QSI reporting — the two cannot be split across forms.** Per the same IRS instructions: if a broker reports QSI in 1099-OID Box 2, it must report ABP in 1099-OID Box 10 and may not report ABP on 1099-INT. Box 10 explicitly covers TIPS: *"For a taxable covered security, including a Treasury inflation-protected security, shows the amount of premium amortization allocable to the interest payment(s)."*
 
-- **Common (e.g., Vanguard, Fidelity):** QSI → 1099-INT Box 3. ABP → 1099-INT Box 12.
-- **Alternative (per IRS instructions):** QSI → 1099-OID Box 2. ABP → 1099-OID Box 10.
-- **Schwab (confirmed):** QSI → 1099-INT Box 3. ABP → 1099-OID Box 10.
+| Configuration | QSI Box | ABP Box |
+|---|---|---|
+| Common (e.g., Vanguard, Fidelity) | 1099-INT Box 3 | 1099-INT Box 12 |
+| Alternative (per IRS instructions) | 1099-OID Box 2 | 1099-OID Box 10 |
+| Schwab (confirmed) | 1099-INT Box 3 | 1099-OID Box 10 |
 
 Schwab uses a hybrid configuration: QSI in 1099-INT Box 3 (not Box 2), ABP in 1099-OID Box 10. This does not match either standard configuration defined in the IRS instructions — the IRS rule pairs Box 2 with Box 10, but Schwab reports QSI on 1099-INT while placing ABP on 1099-OID. The practical effect is correct (ABP reduces interest income), but the split across forms is non-standard. Confirmed via Bogleheads forum (CUSIP 91282CDX6, $88,000 face). → [See Schwab ABP error case study](#broker-error-case-study-schwab--cusip-91282cdx6)
 
@@ -59,11 +61,13 @@ Schwab uses a hybrid configuration: QSI in 1099-INT Box 3 (not Box 2), ABP in 10
 
 ## The Three Taxable Items for TIPS Held in Taxable Accounts
 
-- **1099-INT Box 3:** Semi-annual coupon (QSI). Formula: `face × IR(payment date) × coupon/2`. State-exempt: yes.
-- **1099-INT Box 12:** Amortized bond premium (ABP) — common config. See ABP section below. Effect: reduces Box 3.
-- **1099-OID Box 2:** Semi-annual coupon (QSI) — alternative config. Same formula as Box 3. State-exempt: yes.
-- **1099-OID Box 8:** Annual inflation accrual (OID). Formula: `face × (IR_end − IR_start)`. State-exempt: yes.
-- **1099-OID Box 10:** Amortized bond premium (ABP) — alternative/Schwab config. See ABP section below. Effect: reduces Box 2 or Box 3.
+| Box | Content | Formula / Effect | State-Exempt |
+|---|---|---|---|
+| 1099-INT Box 3 | Semi-annual coupon (QSI) | `face × IR(payment date) × coupon/2` | Yes |
+| 1099-INT Box 12 | Amortized bond premium (ABP) — common config | Reduces Box 3 | — |
+| 1099-OID Box 2 | Semi-annual coupon (QSI) — alternative config | Same formula as Box 3 | Yes |
+| 1099-OID Box 8 | Annual inflation accrual (OID) | `face × (IR_end − IR_start)` | Yes |
+| 1099-OID Box 10 | Amortized bond premium (ABP) — alternative/Schwab config | Reduces Box 2 or Box 3 | — |
 
 Box 12 (or Box 10 if your broker uses the alternative or Schwab configuration) applies only if the TIPS was purchased at a premium (adjusted cost > indexed par). It reduces the taxable interest on Schedule B.
 
@@ -128,9 +132,11 @@ Row 1 may be slightly negative if settlement is near month-end and ref CPI inter
 
 ### Broker Comparison
 
-- **Vanguard:** Monthly rows per lot. Year-end date: 1/1 ✓
-- **Fidelity:** Single total per CUSIP. Year-end date: 1/1 ✓
-- **TreasuryDirect:** Annual only. Year-end date: 12/31 ❌
+| Broker | OID Detail | Year-End Date |
+|---|---|---|
+| Vanguard | Monthly rows per lot | 1/1 ✓ |
+| Fidelity | Single total per CUSIP | 1/1 ✓ |
+| TreasuryDirect | Annual only | 12/31 ❌ |
 
 TD 1099-OID is calculated incorrectly per IRS Pub 1212 — always recalculate if using TD figures. (TD uses 12/31 as year-end; IRS Pub 1212 requires the ref CPI for 1/1 of the following year.)
 

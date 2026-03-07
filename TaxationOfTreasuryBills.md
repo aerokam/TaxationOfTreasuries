@@ -105,30 +105,27 @@ You are still required to report the income. You must calculate the ratable shar
 
 ## Where Things Go — Quick Reference
 
-- **Acquisition discount — held to maturity:** 1099-INT Box 3 → Schedule B. State: auto-excluded by most software.
-- **Acquisition discount — sold early, broker uses Box 3:** 1099-INT Box 3 → Schedule B. State: auto-excluded by most software.
-- **Gain from early sale — supplemental section (Schwab):** Supplemental (not on 1099-B) → Form 8949 Part I, Box C (Code O) + dummy 1099-INT Box 3. State: manual intervention required.
-- **Residual capital gain above ratable share:** Form 8949 Part I → Schedule D. State: taxable at state level.
+| Item | Source | Federal Destination | State |
+|---|---|---|---|
+| Acquisition discount — held to maturity | 1099-INT Box 3 | Schedule B | Auto-excluded by most software |
+| Acquisition discount — sold early, broker uses Box 3 | 1099-INT Box 3 | Schedule B | Auto-excluded by most software |
+| Gain from early sale — supplemental section (Schwab) | Supplemental (not on 1099-B) | Form 8949 Part I, Box C (Code O) + dummy 1099-INT Box 3 | Manual intervention required |
+| Residual capital gain above ratable share | Form 8949 Part I | Schedule D | Taxable at state level |
 
 ---
 
 ## T-Bills vs. Notes/Bonds: Key Differences
 
-**Income type:** T-Bills — acquisition discount (no coupon). Notes/Bonds — coupon interest + possible AMD.
-
-**When income is reported:** T-Bills — year of maturity (or sale). Notes/Bonds — each coupon year.
-
-**IRS term for discount:** T-Bills — accrued acquisition discount. Notes/Bonds — accrued market discount (AMD).
-
-**Broker reports at maturity:** T-Bills — 1099-INT Box 3. Notes/Bonds — 1099-INT Box 3 (coupon) + 1099-B Box 1f (AMD if applicable).
-
-**Sold before maturity:** T-Bills — supplemental section (not 1099-B); Code O on Form 8949. Notes/Bonds — 1099-B with AMD in Box 1f; Code D on Form 8949.
-
-**State exemption:** T-Bills — automatic for Box 3; manual if in supplemental section. Notes/Bonds — manual for AMD; automatic for Box 3 coupon.
-
-**Accrued interest at purchase:** T-Bills — N/A (no coupon). Notes/Bonds — required adjustment for reopenings and secondary market purchases.
-
-**Finance Buff principle:** Both — buy at auction, hold to maturity = zero manual work.
+| | T-Bills | Notes/Bonds |
+|---|---|---|
+| **Income type** | Acquisition discount (no coupon) | Coupon interest + possible AMD |
+| **When income is reported** | Year of maturity (or sale) | Each coupon year |
+| **IRS term for discount** | Accrued acquisition discount | Accrued market discount (AMD) |
+| **Broker reports at maturity** | 1099-INT Box 3 | 1099-INT Box 3 (coupon) + 1099-B Box 1f (AMD if applicable) |
+| **Sold before maturity** | Supplemental section (not 1099-B); Code O on Form 8949 | 1099-B with AMD in Box 1f; Code D on Form 8949 |
+| **State exemption** | Automatic for Box 3; manual if in supplemental section | Manual for AMD; automatic for Box 3 coupon |
+| **Accrued interest at purchase** | N/A (no coupon) | Required adjustment for reopenings and secondary market purchases |
+| **Finance Buff principle** | Buy at auction, hold to maturity = zero manual work | Buy at auction, hold to maturity = zero manual work |
 
 ---
 

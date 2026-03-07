@@ -79,23 +79,17 @@ Looks like buying at original auction but has complications. Reopening auctions 
 
 #### Quick Comparison: Original Auction vs. Reopening (Both Held to Maturity)
 
-**Accrued interest at purchase:** Original — small (days between dated date and issue date). Reopening — significant (one or more months since original auction dated date).
-
-**Dollar impact if not tracked:** Original — minor (days of interest). Reopening — major (months of interest).
-
-**Your 1099-INT Box 3 first coupon:** Original — slightly overstates by small amount. Reopening — notably overstates by accrued interest paid.
-
-**Schedule B adjustment required:** Original — yes, but dollar amount is small. Reopening — yes, and amount is material.
-
-**IRS notification of adjustment:** Both — broker notes it; IRS doesn't — you track it.
-
-**Price at purchase:** Original — at/near par (de minimis discount typical). Reopening — depends on price change since original auction.
-
-**Market discount or premium applies:** Original — unlikely (de minimis discount only). Reopening — likely (can be substantial AMD or ABP requiring tracking).
-
-**Filing complexity:** Original — low (small adjustment). Reopening — moderate (larger accrued interest + possible AMD/ABP).
-
-**Bottom line:** Original — clean, single small adjustment. Reopening — more steps; accrued interest amount is the key gotcha.
+| | Original Auction | Reopening |
+|---|---|---|
+| **Accrued interest at purchase** | Small (days between dated date and issue date) | Significant (one or more months since original auction dated date) |
+| **Dollar impact if not tracked** | Minor (days of interest) | Major (months of interest) |
+| **Your 1099-INT Box 3 first coupon** | Slightly overstates by small amount | Notably overstates by accrued interest paid |
+| **Schedule B adjustment required** | Yes, but dollar amount is small | Yes, and amount is material |
+| **IRS notification of adjustment** | Broker notes it; IRS doesn't — you track it | Broker notes it; IRS doesn't — you track it |
+| **Price at purchase** | At/near par (de minimis discount typical) | Depends on price change since original auction |
+| **Market discount or premium applies** | Unlikely (de minimis discount only) | Likely (can be substantial AMD or ABP requiring tracking) |
+| **Filing complexity** | Low (small adjustment) | Moderate (larger accrued interest + possible AMD/ABP) |
+| **Bottom line** | Clean, single small adjustment | More steps; accrued interest amount is the key gotcha |
 
 ### Scenario 3: Original Auction → Sold on Secondary Market (T-Notes/Bonds)
 
@@ -209,12 +203,14 @@ For detailed TIPS OID calculation and broker reporting mechanics, see [TIPS_OID_
 
 ## Where Things Go — Quick Reference
 
-- **Coupon interest:** 1099-INT Box 3 → Schedule B. State: auto-excluded by most software.
-- **TIPS inflation adjustment:** 1099-OID Box 8 → Schedule B. State: auto-excluded by most software.
-- **AMD at disposal:** 1099-B Box 1f → Form 8949 (Code D) + Schedule B as interest. State: manual intervention required.
-- **Capital gain/loss (non-AMD):** 1099-B → Schedule D.
-- **Accrued interest paid to seller:** 1099 supplement only (not IRS-reported) → Schedule B subtraction (manual).
-- **Premium amortization:** 1099-INT Box 12 (common) or 1099-OID Box 10 (Schwab) → reduces Box 3 or Box 2 interest on Schedule B.
+| Item | Source | Federal Destination | State |
+|---|---|---|---|
+| Coupon interest | 1099-INT Box 3 | Schedule B | Auto-excluded by most software |
+| TIPS inflation adjustment | 1099-OID Box 8 | Schedule B | Auto-excluded by most software |
+| AMD at disposal | 1099-B Box 1f | Form 8949 (Code D) + Schedule B as interest | Manual intervention required |
+| Capital gain/loss (non-AMD) | 1099-B | Schedule D | — |
+| Accrued interest paid to seller | 1099 supplement only (not IRS-reported) | Schedule B subtraction (manual) | — |
+| Premium amortization | 1099-INT Box 12 (common) or 1099-OID Box 10 (Schwab) | Reduces Box 3 or Box 2 interest on Schedule B | — |
 
 ---
 
@@ -327,14 +323,16 @@ If you bought TIPS at a premium on the secondary market, the acquisition premium
 
 ### Summary Table
 
-- **ABP (common config)** — 1099-INT Box 12. TurboTax: unknown. H&R Block: manual — two-screen entry.
-- **ABP (alternative config)** — 1099-OID Box 10. TurboTax: unknown. H&R Block: unknown.
-- **Accrued interest paid** — 1099 supplement. TurboTax: manual — negative adjustment. H&R Block: manual — negative adjustment.
-- **ABP + accrued interest** — TurboTax: unknown. H&R Block: manual — split into two entries.
-- **AMD → Schedule B** — 1099-B Box 1f. TurboTax: auto (one-by-one entry only). H&R Block: manual — dummy 1099-INT Box 3.
-- **AMD state exemption** — TurboTax: manual override required. H&R Block: auto if dummy uses Box 3.
-- **Coupon interest** — 1099-INT Box 3. TurboTax: auto. H&R Block: auto.
-- **TIPS OID** — 1099-OID Box 8. TurboTax: auto. H&R Block: auto.
+| Item | Source | TurboTax | H&R Block |
+|---|---|---|---|
+| ABP (common config) | 1099-INT Box 12 | Unknown | Manual — two-screen entry |
+| ABP (alternative config) | 1099-OID Box 10 | Unknown | Unknown |
+| Accrued interest paid | 1099 supplement | Manual — negative adjustment | Manual — negative adjustment |
+| ABP + accrued interest | — | Unknown | Manual — split into two entries |
+| AMD → Schedule B | 1099-B Box 1f | Auto (one-by-one entry only) | Manual — dummy 1099-INT Box 3 |
+| AMD state exemption | — | Manual override required | Auto if dummy uses Box 3 |
+| Coupon interest | 1099-INT Box 3 | Auto | Auto |
+| TIPS OID | 1099-OID Box 8 | Auto | Auto |
 
 ### Bottom Line for Filers
 
