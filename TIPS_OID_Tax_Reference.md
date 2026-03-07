@@ -1,5 +1,9 @@
 # TIPS OID and Tax Reference
 
+**Foundation dependency:** This document relies on [TaxationOfTreasuries_Foundation.md](TaxationOfTreasuries_Foundation.md) for the following shared principles: federal taxability, state and local exemption, the Finance Buff Principle, composite 1099 structure, tax software general notes, and caveats. When editing this document, review the Foundation doc to determine whether any changes also belong there.
+
+This document covers TIPS-specific OID calculation, ABP mechanics, broker reporting configurations, and cost basis. For the six purchase/disposition scenarios applicable to TIPS, see [TaxationOfTreasuryNotesAndBonds.md](TaxationOfTreasuryNotesAndBonds.md).
+
 ## Table of Contents
 
 1. [Regulatory Basis](#regulatory-basis)
@@ -45,11 +49,9 @@ Brokers elect either (a) report QSI on 1099-INT Box 3 and OID on 1099-OID Box 8,
 
 **ABP reporting is tied to QSI reporting — the two cannot be split across forms.** Per the same IRS instructions: if a broker reports QSI in 1099-OID Box 2, it must report ABP in 1099-OID Box 10 and may not report ABP on 1099-INT. Box 10 explicitly covers TIPS: *"For a taxable covered security, including a Treasury inflation-protected security, shows the amount of premium amortization allocable to the interest payment(s)."*
 
-| Broker configuration | QSI | ABP |
-|---|---|---|
-| Common (e.g., Vanguard, Fidelity) | 1099-INT Box 3 | 1099-INT Box 12 |
-| Alternative (per IRS instructions) | 1099-OID Box 2 | 1099-OID Box 10 |
-| Schwab (confirmed) | 1099-INT Box 3 | 1099-OID Box 10 |
+- **Common (e.g., Vanguard, Fidelity):** QSI → 1099-INT Box 3. ABP → 1099-INT Box 12.
+- **Alternative (per IRS instructions):** QSI → 1099-OID Box 2. ABP → 1099-OID Box 10.
+- **Schwab (confirmed):** QSI → 1099-INT Box 3. ABP → 1099-OID Box 10.
 
 Schwab uses a hybrid configuration: QSI in 1099-INT Box 3 (not Box 2), ABP in 1099-OID Box 10. This does not match either standard configuration defined in the IRS instructions — the IRS rule pairs Box 2 with Box 10, but Schwab reports QSI on 1099-INT while placing ABP on 1099-OID. The practical effect is correct (ABP reduces interest income), but the split across forms is non-standard. Confirmed via Bogleheads forum (CUSIP 91282CDX6, $88,000 face). → [See Schwab ABP error case study](#broker-error-case-study-schwab--cusip-91282cdx6)
 
@@ -57,13 +59,11 @@ Schwab uses a hybrid configuration: QSI in 1099-INT Box 3 (not Box 2), ABP in 10
 
 ## The Three Taxable Items for TIPS Held in Taxable Accounts
 
-| Form | Box | What it is | Formula | State exempt? |
-|---|---|---|---|---|
-| 1099-INT | 3 | Semi-annual coupon (QSI) | face × IR(payment date) × coupon/2 | Yes |
-| 1099-INT | 12 | Amortized bond premium (ABP) — common config | See below | Reduces Box 3 |
-| 1099-OID | 2 | Semi-annual coupon (QSI) — alternative config | same formula | Yes |
-| 1099-OID | 8 | Annual inflation accrual (OID) | face × (IR_end − IR_start) | Yes |
-| 1099-OID | 10 | Amortized bond premium (ABP) — alternative/Schwab config | See below | Reduces Box 2 or Box 3 |
+- **1099-INT Box 3:** Semi-annual coupon (QSI). Formula: `face × IR(payment date) × coupon/2`. State-exempt: yes.
+- **1099-INT Box 12:** Amortized bond premium (ABP) — common config. See ABP section below. Effect: reduces Box 3.
+- **1099-OID Box 2:** Semi-annual coupon (QSI) — alternative config. Same formula as Box 3. State-exempt: yes.
+- **1099-OID Box 8:** Annual inflation accrual (OID). Formula: `face × (IR_end − IR_start)`. State-exempt: yes.
+- **1099-OID Box 10:** Amortized bond premium (ABP) — alternative/Schwab config. See ABP section below. Effect: reduces Box 2 or Box 3.
 
 Box 12 (or Box 10 if your broker uses the alternative or Schwab configuration) applies only if the TIPS was purchased at a premium (adjusted cost > indexed par). It reduces the taxable interest on Schedule B.
 
@@ -128,11 +128,9 @@ Row 1 may be slightly negative if settlement is near month-end and ref CPI inter
 
 ### Broker Comparison
 
-| Broker | Breakdown | Year-end date |
-|---|---|---|
-| Vanguard | Monthly rows per lot | 1/1 ✓ |
-| Fidelity | Single total per CUSIP | 1/1 ✓ |
-| TreasuryDirect | Annual only | 12/31 ❌ |
+- **Vanguard:** Monthly rows per lot. Year-end date: 1/1 ✓
+- **Fidelity:** Single total per CUSIP. Year-end date: 1/1 ✓
+- **TreasuryDirect:** Annual only. Year-end date: 12/31 ❌
 
 TD 1099-OID is calculated incorrectly per IRS Pub 1212 — always recalculate if using TD figures. (TD uses 12/31 as year-end; IRS Pub 1212 requires the ref CPI for 1/1 of the following year.)
 
@@ -255,16 +253,14 @@ Small discrepancies (a few dollars on $100K face) between calculated and display
 
 ## Vanguard Online Statement — TIPS Field Definitions
 
-| Field | Meaning | Formula |
-|---|---|---|
-| Price | Unadjusted quoted price | — |
-| Current balance | Inflation-adjusted market value | `face × (unadj_price/100) × IR` |
-| Remaining balance | Inflation-adjusted principal | `face × IR` |
-| Inflation factor / Dec factor TIPS | Index ratio | `refCPI(date) / refCPI(datedDate)` |
-| Accrued interest | Accrued coupon since last payment | `face × IR × couponRate × days/180` |
-| Total cost (cost basis) | OID-adjusted basis | `original_cost + cumulative_OID` |
-| Cost per share | Adjusted basis per $1 face | ≈ current IR |
-| Long-term capital gain | Price appreciation only | `market_value − adjusted_basis` |
+- **Price:** Unadjusted quoted price.
+- **Current balance:** Inflation-adjusted market value. Formula: `face × (unadj_price/100) × IR`.
+- **Remaining balance:** Inflation-adjusted principal. Formula: `face × IR`.
+- **Inflation factor / Dec factor TIPS:** Index ratio. Formula: `refCPI(date) / refCPI(datedDate)`.
+- **Accrued interest:** Accrued coupon since last payment. Formula: `face × IR × couponRate × days/180`.
+- **Total cost (cost basis):** OID-adjusted basis. Formula: `original_cost + cumulative_OID`.
+- **Cost per share:** Adjusted basis per $1 face. ≈ current IR.
+- **Long-term capital gain:** Price appreciation only. Formula: `market_value − adjusted_basis`.
 
 ---
 
@@ -332,16 +328,14 @@ Total  6009.04   (bond premium 6009.05 — diff $0.01, rounding)
 
 ### Dependencies
 
-**Requires:** 2_1_TIPS_Basics.md (ref CPI formula, index ratio, adjusted principal), TaxationOfTreasuries.md (TIPS OID tax treatment overview)
+**Requires:** 2_1_TIPS_Basics.md (ref CPI formula, index ratio, adjusted principal), TaxationOfTreasuries_Foundation.md (shared tax principles), TaxationOfTreasuryNotesAndBonds.md (TIPS scenario coverage)
 
 **Adds:** Regulatory basis for 1099 reporting, qualified stated interest definition, OID calculation detail, amortized bond premium (ABP) calculation, broker 1099 reporting differences, cost basis step-up, online statement field interpretation, verification workflow.
 
 ### Data Sources — Always Fetch, Never Guess
 
-| Data needed | Source |
-|---|---|
-| Daily ref CPI values | `https://pub-ba11062b177640459f72e0a88d0261ae.r2.dev/TIPS/RefCpiNsaSa.csv` |
-| Dated-date ref CPI, issue-date IR, unadj price, accrued int per 1000 | `TipsAuctionResults.csv` (project file) |
+- **Daily ref CPI values:** `https://pub-ba11062b177640459f72e0a88d0261ae.r2.dev/TIPS/RefCpiNsaSa.csv`
+- **Dated-date ref CPI, issue-date IR, unadj price, accrued int per 1000:** `TipsAuctionResults.csv` (project file)
 
 Ref CPI values are rounded to 5 decimal places in the CSV — use them as-is. Never use index ratios from TreasuryDirect XML/PDF for broker OID verification (TD rounds IR to 5 decimal places and uses 12/31 not 1/1 as year-end).
 
