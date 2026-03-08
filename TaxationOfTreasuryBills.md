@@ -55,7 +55,9 @@ Per Pub 550, "Short-term government obligations":[^pub550-stgov]
 
 The **ratable share** is the prorated portion of the total acquisition discount for the days you held the bill:
 
-> **Ratable share = (days held ÷ days from issue to maturity) × (face value − your purchase price)**
+> **Ratable share = (days held ÷ days from settlement to maturity) × (face value − your purchase price)**
+
+For bills purchased at auction, settlement date and issue date are the same, but for secondary market purchases, use your actual settlement date — not the  issue date.
 
 Any gain above the ratable share is a capital gain (short-term, since all T-bills have original maturity ≤52 weeks). In practice the gain almost never exceeds the ratable share. The ratable share is reported as ordinary interest income and is state-exempt.
 
@@ -76,7 +78,7 @@ Broker practice varies and is inconsistent:
 1. The supplemental section data imports into "Sales of Collectibles and Other Investment Property" — not the 1099-B section.
 2. For each lot sold before maturity, confirm that dates, proceeds, and cost basis are correct.
 3. In the "Special type" dropdown, select **O — Other adjustment**.
-4. In the Adjustment field, enter the **ratable share of acquisition discount as a negative number**: (days held ÷ total days from issue to maturity) × (face value − cost basis).
+4. In the Adjustment field, enter the **ratable share of acquisition discount as a negative number**: (days held ÷ days from settlement to maturity) × (face value − cost basis).
 5. Whatever gain remains after the adjustment flows to Form 8949 Part I, Box C as a short-term capital gain. (In practice this residual is very small or zero.)
 6. **Create a dummy 1099-INT** with the total ratable share for all bills sold before maturity in **Box 3** — NOT Box 1. This reports the acquisition discount as Treasury interest income. Box 3 triggers the automatic state exemption in HRB.
 
